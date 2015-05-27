@@ -61,7 +61,7 @@ void CalcRotations(void)
 	preR1[4]=me.rotation[0];
 	//n1=-vx/(pi*D*tan(alpha))-vy/(pi*D)+vw*£¨lf-lw*tan(alpha))/(2*pi*D*tan(alpha))
 	//No3:+++//No4-++
-me.rotation[0]= -getXvelocity() / xRatio+getYvelocity() /yRatio+getWvelocity() *wRatio ;
+me.rotation[0]= getXvelocity() / xRatio+getYvelocity() /yRatio+getWvelocity() *wRatio ;
 me.rotation[0] = ( 60 * me.rotation[0] ) ;
 me.rotation_fil[0]=0.1*(preR1[0]+preR1[2]+preR1[3]+preR1[4]+preR1[1])+me.rotation[0]*0.5;
 
@@ -72,7 +72,7 @@ me.rotation_fil[0]=0.1*(preR1[0]+preR1[2]+preR1[3]+preR1[4]+preR1[1])+me.rotatio
 	preR2[4]=me.rotation[1];
 	//n2=vx/(pi*D*tan(alpha))+vy/(pi*D)+£¨-lf-lw*tan(alpha))/(2*pi*D*tan(alpha))
 	//No3:+-+//No4:--+
-me.rotation[1]= -getXvelocity() / xRatio-getYvelocity() / yRatio+getWvelocity() * wRatio;
+me.rotation[1]= getXvelocity() / xRatio+getYvelocity() / yRatio+getWvelocity() * wRatio;
 me.rotation[1]=(60*me.rotation[1]);
 me.rotation_fil[1]=0.1*(preR2[0]+preR2[2]+preR2[3]+preR2[4]+preR2[1])+me.rotation[1]*0.5;
 	
@@ -84,7 +84,7 @@ me.rotation_fil[1]=0.1*(preR2[0]+preR2[2]+preR2[3]+preR2[4]+preR2[1])+me.rotatio
 	preR3[4]=me.rotation[2];
 	//n3=vx/(pi*D*tan(alpha))+vy/(pi*D)+£¨lf-lw*tan(alpha))/(2*pi*D*tan(alpha)) /red:-,+,-
 	//No3:--+//No4:+-+
-me.rotation[2]=getXvelocity() /xRatio-getYvelocity() /yRatio+getWvelocity() *wRatio;
+me.rotation[2]=getXvelocity() /xRatio+getYvelocity() /yRatio+getWvelocity() *wRatio;
 me.rotation[2]=(60*me.rotation[2]);
 me.rotation_fil[2]=0.1*(preR3[0]+preR3[2]+preR3[3]+preR3[4]+preR3[1])+me.rotation[2]*0.5;
 

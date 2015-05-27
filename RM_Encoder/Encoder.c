@@ -53,10 +53,10 @@ void Encoder_Init(void)
 *****************************************************************/
 void Encoder_Get(void)
 {
-		encoder_cnt[0] =Encoder_Count(TIM2); //encoder_cnt[0]*0.45+Encoder_Count(TIM2)*0.55;
-		encoder_cnt[1] =Encoder_Count(TIM3); //encoder_cnt[1]*0.45+Encoder_Count(TIM3)*0.55;
+		encoder_cnt[0] =Encoder_Count(TIM5); //encoder_cnt[0]*0.45+Encoder_Count(TIM2)*0.55;
+		encoder_cnt[1] =Encoder_Count(TIM2); //encoder_cnt[1]*0.45+Encoder_Count(TIM3)*0.55;
 		encoder_cnt[2] =Encoder_Count(TIM4); //encoder_cnt[2]*0.45+Encoder_Count(TIM4)*0.55;
-		encoder_cnt[3] =Encoder_Count(TIM5);//encoder_cnt[2]*0.45+Encoder_Count(TIM5)*0.55;
+		encoder_cnt[3] =Encoder_Count(TIM3);//encoder_cnt[2]*0.45+Encoder_Count(TIM5)*0.55;
 	Encoder_Reset(TIM2);
 	Encoder_Reset(TIM3);
 	Encoder_Reset(TIM4);
@@ -233,7 +233,7 @@ void Encoder_TIM5_Init(void)
 
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource0,  GPIO_AF_TIM5);
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource1,  GPIO_AF_TIM5);
-	 TIM_DeInit(TIM5);
+
 	TIM_EncoderInterfaceConfig(TIM5, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
 	//Reset counter£¬From 0x8000
 	TIM_ICStructInit(&TIM_ICInitStructure);

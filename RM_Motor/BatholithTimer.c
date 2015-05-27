@@ -181,16 +181,16 @@ void batholithSetPwm(){
 
 	TIM_SetCompare2(TIM8,(uint32_t)(me.pwm[0]-piancha1));
 	TIM_SetCompare3(TIM8,(uint32_t)(me.pwm[1]-piancha2));
-	TIM_SetCompare1(TIM1,(uint32_t)(me.pwm[2]-piancha3));
-	TIM_SetCompare2(TIM1,(uint32_t)(me.pwm[3]-piancha4));
+	TIM_SetCompare2(TIM1,(uint32_t)(me.pwm[2]-piancha3));
+	TIM_SetCompare1(TIM1,(uint32_t)(me.pwm[3]-piancha4));
 
 	
 }
 void batholithResetPwm(){
 	TIM_SetCompare2(TIM8,500);//-piancha1);
 	TIM_SetCompare3(TIM8,500);//-piancha2);
-	TIM_SetCompare1(TIM1,500-piancha3);
-	TIM_SetCompare2(TIM1,500-piancha4);	
+	TIM_SetCompare2(TIM1,500-piancha3);
+	TIM_SetCompare1(TIM1,500-piancha4);	
 	me.isPWMallowed=0;
 }
 void setPiancha1(int temp){piancha1=temp;}

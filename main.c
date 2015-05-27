@@ -62,9 +62,9 @@ int i=0;
 			resetIsReceive();
 			setMotoParameter();
 		}
-		if(i==5000)printCurrentPosition();
-	//if(i==5000)printf("%d %d %d %d",encoder_cnt[0],encoder_cnt[1],encoder_cnt[2],encoder_cnt[3]);		
-//	}
+		if(i==5000)printf("Encoder:%d %d %d %d\r\n",encoder_cnt[0],encoder_cnt[1],encoder_cnt[2],encoder_cnt[3]);		
+		if(i==15000)printf("PWM:%f %f %f %f\r\n",me.pwm[0],me.pwm[1],me.pwm[2],me.pwm[3]);
+		//	}
 	}
 
 return 0;
