@@ -32,8 +32,8 @@ void CAN1_RX0_IRQHandler(void);
 
 //added by huangmin on 2015.04.25
 //pWord for visual scope display 
-extern unsigned char pWord[10];
-extern int current_position_203;
+
+
 
 //called by RC_Convert()
 void setIsAutoTargetMode(uint8_t);
@@ -46,7 +46,7 @@ void setIsYawTargeted(int8_t);
 void setIsPitchTargeted(int8_t);
 void setWanted_pWanted_y(uint16_t,uint16_t);
 //for debugging
-
+void printCurrentPosition(void);
 #endif
 
 

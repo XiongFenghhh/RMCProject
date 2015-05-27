@@ -35,33 +35,36 @@ int i=0;
 	TIM_CtrlPWMOutputs(TIM8,ENABLE);
 	batholithResetPwm();	
 	while(1){
-//		i++;
-//		i%=10000;
-//		RC_Receive();
-//		RC_Convert();		
-//		if(me.isStart)
-//		{
-//			CalcRotations();
-//			PIDAlgorithm();
-//	  }
-//		else 
-//		batholithResetPwm();
-//		BMotor_PWM(1);
-//		BMotor_PWM(2);
-//		if(isAutoTarget()==1){
-//			setIsPitchTargeted(getYunTaiAdjustPitch()>=30?-1:getYunTaiAdjustPitch()<=-30?1:0);
-//			setIsYawTargeted(getYunTaiAdjustYaw()>=40?-1:getYunTaiAdjustYaw()<=-40?1:0);
-//				
-//		}
-////if(me.isDebugging==1){
-//	if(getIsReceive()==1)
-//		{
-//			outputData();	
-//			resetIsReceive();
-//			setMotoParameter();
-//		}
-//	if(i==5000)printf("%d %d %d %d",encoder_cnt[0],encoder_cnt[1],encoder_cnt[2],encoder_cnt[3]);		
-////	}
+		i++;
+		//RS232_VisualScope( USART3, pWord, 8);
+
+		i%=10000;
+		RC_Receive();
+		RC_Convert();		
+		if(me.isStart)
+		{
+			CalcRotations();
+			PIDAlgorithm();
+	  }
+		else 
+		batholithResetPwm();
+		BMotor_PWM(1);
+		BMotor_PWM(2);
+		if(isAutoTarget()==1){
+			setIsPitchTargeted(getYunTaiAdjustPitch()>=30?-1:getYunTaiAdjustPitch()<=-30?1:0);
+			setIsYawTargeted(getYunTaiAdjustYaw()>=40?-1:getYunTaiAdjustYaw()<=-40?1:0);
+				
+		}
+//if(me.isDebugging==1){
+	if(getIsReceive()==1)
+		{
+			outputData();	
+			resetIsReceive();
+			setMotoParameter();
+		}
+		if(i==5000)printCurrentPosition();
+	//if(i==5000)printf("%d %d %d %d",encoder_cnt[0],encoder_cnt[1],encoder_cnt[2],encoder_cnt[3]);		
+//	}
 	}
 
 return 0;

@@ -152,10 +152,11 @@ void setMotoParameter(){
 //if(ki==1)
 //	{
 //		change=1-change;
-//		if(change==0) setYawPositionParameters(((double)kp)/400,0,((double)kd)/10);
+	int kpi;
+setYawPositionParameters(((double)kp),0,((double)kd));
 //		setPitchPositionParameters(((double)kp)/400,0,((double)kd)/10);
 //	}
-int kpi;
+
 if(kd==1)kpi=-(int)kp;
 	else kpi=kp;
 if(ki==2)
@@ -204,3 +205,38 @@ int fputc(int ch, FILE *f)
     USART_SendData(USART3, (uint8_t)ch);
     return ch;
 }
+static u16 RS232_VisualScope_CRC16( u8 *Array, u16 Len )
+{
+	u16 USART_IX, USART_IY, USART_CRC;
+
+	USART_CRC = 0xffff;
+	for(USART_IX=0; USART_IX<Len; USART_IX++) {
+		USART_CRC = USART_CRC^(u16)(Array[USART_IX]);
+		for(USART_IY=0; USART_IY<=7; USART_IY++) {
+			if((USART_CRC&1)!=0)
+				USART_CRC = (USART_CRC>>1)^0xA001;
+			else
+				USART_CRC = USART_CRC>>1;
+		}
+	}
+	return(USART_CRC);
+}
+
+
+
+void RS232_VisualScope( USART_TypeDef* USARTx, u8 *pWord, u16 Len )
+{
+	u8 i = 0;
+	u16 Temp = 0;
+
+	Temp = RS232_VisualScope_CRC16(pWord, Len);
+	pWord[8] = Temp&0x00ff;
+	pWord[9] = (Temp&0xff00)>>8;
+
+	for(i=0; i<10; i++) {
+		USART_SendData(USARTx, (uint8_t)*pWord);
+		while(USART_GetFlagStatus(USARTx, USART_FLAG_TC) == RESET);
+		pWord++;
+	}
+}
+

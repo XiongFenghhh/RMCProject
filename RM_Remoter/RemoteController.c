@@ -1,11 +1,8 @@
 #include "RemoteController.h"
 #define IsForwardBackwardChange ()
 static unsigned char sbus_rx_buffer[18];
-static struct RC_Ctl_t RC_Ctl;
+//static struct RC_Ctl_t RC_Ctl;
 
-static double preXvelocity=0;
-static double preYvelocity=0;
-static double preWvelocity=0;
 static uint16_t preKey=0x0000;
 static  uint8_t isfbSpeedUp;
 static 	uint8_t islrSpeedUp;
@@ -195,7 +192,7 @@ void RC_Convert(void){
 			/**==========================Rotation Control=================================**/
 				if(RC_Ctl.key.leftTurn==1)
 				{
-					RC_Ctl.velocity.w+=-1;
+					RC_Ctl.velocity.w=-1;
 				}
 				if(RC_Ctl.key.rightTurn==1)
 				{
@@ -232,7 +229,8 @@ void RC_Convert(void){
 	}else me.isDebugging=0;
 /**====================================Vision Part======================================**/
 setIsAutoTargetMode(RC_Ctl.key.ctrl);
-setYunTaiPosition(getYunTaiDeltaPositionPitch(),getYunTaiDeltaPositionYaw());	
+/**====================================Yuntai Part======================================**/	
+//setYunTaiPosition(getYunTaiDeltaPositionPitch(),getYunTaiDeltaPositionYaw());	
 
 }
 double getYvelocity(void){return realYSpeed;}
@@ -249,7 +247,7 @@ void getMouse(void)
 // Û±Íº¸≈Ã
 double getYunTaiDeltaPositionYaw(void){
 	if(RC_Ctl.rc.s1!=1)
-	return(double)RC_Ctl.mouse.x;
+	return (double)(RC_Ctl.mouse.x)/80;
 	else return 0;
 }
 

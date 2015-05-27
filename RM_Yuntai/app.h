@@ -15,7 +15,7 @@ double Velocity_Control_203(double current_velocity_203,double target_velocity_2
 double Position_Control_203(double current_position_203,double target_position_203,uint16_t isMoving);
 //@modified by huangmin on 2015.04.25
 double Current_Control_203(double current_203,double target_current_203);
-
+double followControl(int current_position_203);
 void outputData(void);
 void setPitchPositionParameters(double kp,double ki,double kd);
 void setYawPositionParameters(double kp,double ki,double kd);

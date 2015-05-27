@@ -2,8 +2,8 @@
 #ifdef Shooter1
 static double wanted_p=4000;//ps:5500 ss:4000
 static double prewanted_p=4000;//ps:5500 ss:4000
-static double wanted_y=3000;//ps:5000 ss:3000
-static double prewanted_y=3000;//ps:5000 ss:3000
+static double wanted_y=4000;//ps:5000 ss:3000
+static double prewanted_y=4000;//ps:5000 ss:3000
 #endif
 #ifdef Shooter2
 static double wanted_p=4000;//ps:5500 ss:4000
@@ -28,9 +28,9 @@ int16_t current_203;
 
 int16_t current_position_201;
 static int pre_position_203;
-int current_position_203;//@modified by huangmin on 2015.04.17 
+static int current_position_203;//@modified by huangmin on 2015.04.17 
 int can_irq_count = 0;//added by huangmin on 2015.04.25 
-
+void printCurrentPosition(void){printf("%d\r\n",current_position_203);}
 /*if auto mode find target, record the position the moment target found*/
 void setWanted_pWanted_y(uint16_t wp,uint16_t wy){
 	wanted_p=wp;
@@ -126,11 +126,13 @@ void CAN1_RX0_IRQHandler(void)
         {             
              //获得云台电机0x201的码盘值
            current_position_201 = (rx_message.Data[0]<<8) | rx_message.Data[1];		
-				
+				 pWord[0] = rx_message.Data[1];
+					 pWord[1] = rx_message.Data[0];	
         }
         if(rx_message.StdId == 0x202)
         { 
-					current_position_201 = (rx_message.Data[0]<<8) | rx_message.Data[1];		
+					current_position_201 = (rx_message.Data[0]<<8) | rx_message.Data[1];	
+					
              //获得云台电机0x202的码盘值           
         }		
         if(rx_message.StdId == 0x203)
@@ -141,13 +143,14 @@ void CAN1_RX0_IRQHandler(void)
 					
 					//@modified by huangmin on 2015.04.17
 					current_position_203 = (rx_message.Data[0]<<8) | rx_message.Data[1];
-					
+					pWord[2] = rx_message.Data[3];
+					pWord[3] = rx_message.Data[2];
          
         }
         
 	
-				wanted_p=wanted_p*0.6+prewanted_p*0.4;
-				wanted_y=wanted_y*0.6+prewanted_y*0.4;
+//				wanted_p=wanted_p*0.9+prewanted_p*0.1;
+//				wanted_y=wanted_y*0.9+prewanted_y*0.1;
 			//必须要加上中心值
 			
 				if(wanted_p>5000)			 wanted_p=5000;//ss:4500 ps:6000
@@ -157,9 +160,19 @@ void CAN1_RX0_IRQHandler(void)
 		//do the mannual control if not in auto mode		
     if(isAutoTargetMode==0)
 		{
+			if(abs(RC_Ctl.mouse.x)<1)
+			{
 			Cmd_ESC((int16_t)Position_Control_201(current_position_201,wanted_p ),
 																																					0,
 			(int16_t)Position_Control_203(current_position_203,wanted_y,0));//仅有位置环
+			}else
+			{
+				Cmd_ESC((int16_t)Position_Control_201(current_position_201,wanted_p ),
+																																					0,
+			(int16_t)Position_Control_203(current_position_203,current_position_203+(RC_Ctl.mouse.x)/60,0));//仅有位置环
+			}
+			RC_Ctl.velocity.w = followControl(current_position_203);
+/**============================================================**/		
 //			Cmd_ESC((int16_t)Position_Control_201(current_position_201,wanted_p ),
 //																																					0,
 //			(int16_t)Velocity_Control_203(current_position_203-pre_position_203,Position_Control_203(current_position_203,wanted_y,0)));//位置，速度环
@@ -168,6 +181,7 @@ void CAN1_RX0_IRQHandler(void)
 //																																					0,
 //			(int16_t)Current_Control_203((double)current_203,Position_Control_203(current_position_203,wanted_y,0)));
 //			printf("%f \r\n",Current_Control_203((double)current_203,Position_Control_203(current_position_203,wanted_y,0)));//加入电流环
+			
 			target_p=current_position_201;
 			target_y=current_position_203;
 		}
@@ -193,9 +207,7 @@ void CAN1_RX0_IRQHandler(void)
 						(int16_t)Position_Control_203(current_position_203,target_y,0));
 						wanted_p=current_position_201;
 						wanted_y=current_position_203;
-						
-						
-					}
+				 }
 					
 	prewanted_p=wanted_p;
 prewanted_y=wanted_y;

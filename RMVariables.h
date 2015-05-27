@@ -39,7 +39,8 @@ extern double setXSpeed;
 extern double realXSpeed;
 extern double setYSpeed;
 extern double realYSpeed;
-
+extern struct RC_Ctl_t RC_Ctl;
+extern unsigned char pWord[10];
 
 
 extern int16_t encoder_cnt[4];

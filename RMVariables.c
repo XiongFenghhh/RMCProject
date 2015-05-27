@@ -1,5 +1,6 @@
 #include "RMVariables.h"
 struct MotorEngine me;
+struct RC_Ctl_t RC_Ctl;
 MPU6050_RAW_DATA    MPU6050_Raw_Data; 
 MPU6050_REAL_DATA   MPU6050_Real_Data;
 int16_t encoder_cnt[4]={0};
@@ -9,6 +10,8 @@ double lrSpeedRatio=0;
  double realXSpeed;
 double setYSpeed;
  double realYSpeed;
+unsigned char pWord[10];
+
 void delay_ms(uint16_t t){
 int i;
 	for( i=0;i<t;i++)

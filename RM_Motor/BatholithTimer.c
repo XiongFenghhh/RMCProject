@@ -28,7 +28,7 @@ void RmBatholicTIM1_Config(){
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 	TIM_OCInitTypeDef  TIM_OCInitStructure;
 	TIM_BDTRInitTypeDef bdStructure;
-	uint16_t PrescalerValue = (uint16_t) (SystemCoreClock / 20000000) - 1;
+	uint16_t PrescalerValue = (uint16_t) (SystemCoreClock / 10000000) - 1;
 	
 	/* TIM8 clock enable */
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
@@ -97,7 +97,7 @@ void RmBatholicTIM8_Config(){
 	TIM_OCInitTypeDef  TIM_OCInitStructure;
 	TIM_BDTRInitTypeDef bdStructure;
   /* Compute the prescaler value */
-	uint16_t PrescalerValue = (uint16_t) (SystemCoreClock / 20000000) - 1;
+	uint16_t PrescalerValue = (uint16_t) (SystemCoreClock / 10000000) - 1;
 	GPIO_InitTypeDef GPIO_InitStructure;
 	/* TIM4 clock enable */
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM8, ENABLE);
