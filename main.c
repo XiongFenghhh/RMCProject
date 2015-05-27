@@ -36,8 +36,11 @@ int i=0;
 	batholithResetPwm();	
 	while(1){
 		i++;
-		//RS232_VisualScope( USART3, pWord, 8);
-
+		if(vscope_en)
+		{
+	   	vscope_en = 0;
+			RS232_VisualScope( USART3, pWord, 8);
+		}
 		i%=10000;
 		RC_Receive();
 		RC_Convert();		

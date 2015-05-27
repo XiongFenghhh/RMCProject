@@ -6,11 +6,12 @@ MPU6050_REAL_DATA   MPU6050_Real_Data;
 int16_t encoder_cnt[4]={0};
 double fbSpeedRatio=0;
 double lrSpeedRatio=0;
- double setXSpeed;
- double realXSpeed;
+double setXSpeed;
+double realXSpeed;
 double setYSpeed;
- double realYSpeed;
+double realYSpeed;
 unsigned char pWord[10];
+unsigned char vscope_en = 0;
 
 void delay_ms(uint16_t t){
 int i;

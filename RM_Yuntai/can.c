@@ -126,8 +126,8 @@ void CAN1_RX0_IRQHandler(void)
         {             
              //获得云台电机0x201的码盘值
            current_position_201 = (rx_message.Data[0]<<8) | rx_message.Data[1];		
-				 pWord[0] = rx_message.Data[1];
-					 pWord[1] = rx_message.Data[0];	
+				   pWord[0] = rx_message.Data[1];
+					 pWord[1] = rx_message.Data[0];
         }
         if(rx_message.StdId == 0x202)
         { 
@@ -140,12 +140,13 @@ void CAN1_RX0_IRQHandler(void)
              //获得云台电机0x203的码盘值
 					//@modified by huangmin on 2015.04.25
 				  current_203 = (rx_message.Data[2]<<8) | rx_message.Data[3];
-					
-					//@modified by huangmin on 2015.04.17
-					current_position_203 = (rx_message.Data[0]<<8) | rx_message.Data[1];
 					pWord[2] = rx_message.Data[3];
 					pWord[3] = rx_message.Data[2];
-         
+					//@modified by huangmin on 2015.04.17
+					current_position_203 = (rx_message.Data[0]<<8) | rx_message.Data[1];
+					pWord[4] = rx_message.Data[1];
+				  pWord[5] = rx_message.Data[0];
+          vscope_en = 1;
         }
         
 	
