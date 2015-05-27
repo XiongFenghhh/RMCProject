@@ -92,7 +92,7 @@ struct RC_Ctl_t
 		
 		*/
 		struct{
-			uint16_t vel;
+		double vel;
 		double x;
 		double y;
 		double w;

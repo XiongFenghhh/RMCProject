@@ -36,7 +36,11 @@ void BMotor_Init(void)
     gpio.GPIO_Mode = GPIO_Mode_AF;
     gpio.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_Init(GPIOE,&gpio);
-    
+  
+		gpio.GPIO_Pin=GPIO_Pin_10;
+		gpio.GPIO_Speed=GPIO_Speed_100MHz;
+		GPIO_Init(GPIOC,&gpio);
+	
     GPIO_PinAFConfig(GPIOE,GPIO_PinSource5, GPIO_AF_TIM9);
     GPIO_PinAFConfig(GPIOE,GPIO_PinSource6, GPIO_AF_TIM9);
 	
@@ -86,6 +90,8 @@ void BMotor_PWM(uint8_t channel)
 	pwm=getBMPWM()<=0.05*BM_PWM_MAX?\
 	0.05*BM_PWM_MAX:getBMPWM()>=0.1*BM_PWM_MAX?\
 	0.1*BM_PWM_MAX:getBMPWM();
+	if(pwm>0.05*BM_PWM_MAX)GPIO_ResetBits(GPIOC,GPIO_Pin_10);
+	else GPIO_SetBits(GPIOC,GPIO_Pin_10);
 	switch(channel)
 	{
 		case 1:	TIM_SetCompare1(TIM9,pwm);break;

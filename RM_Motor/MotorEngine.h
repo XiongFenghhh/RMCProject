@@ -29,7 +29,7 @@ struct MotorEngine{
 	double maxAbs;
 	
 
-  uint32_t pwm[4];
+  double pwm[4];
 	int isClock[4];
 	
 	int isStart;

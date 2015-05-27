@@ -150,7 +150,7 @@ void CAN1_RX0_IRQHandler(void)
 				wanted_y=wanted_y*0.6+prewanted_y*0.4;
 			//必须要加上中心值
 			
-				if(wanted_p>4500)			 wanted_p=4500;//ss:4500 ps:6000
+				if(wanted_p>5000)			 wanted_p=5000;//ss:4500 ps:6000
 				else if(wanted_p<3500) wanted_p=3500;//ss:3500 ps:5000
 				if(wanted_y>4000)      wanted_y=4000;//ss:4000 ps:5500
 				else if(wanted_y<2000) wanted_y=2000;//ss:2000 ps:4500

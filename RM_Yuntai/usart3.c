@@ -153,31 +153,38 @@ void setMotoParameter(){
 //	{
 //		change=1-change;
 //		if(change==0) setYawPositionParameters(((double)kp)/400,0,((double)kd)/10);
-		setPitchPositionParameters(((double)kp)/400,0,((double)kd)/10);
+//		setPitchPositionParameters(((double)kp)/400,0,((double)kd)/10);
 //	}
+int kpi;
+if(kd==1)kpi=-(int)kp;
+	else kpi=kp;
 if(ki==2)
 	{
 		setWanted_pWanted_y(kp,kd);
 	}
 if(ki==3)
 	{
-		me.Kp[0]=(double)kp/100;
-		me.Kd[0]=(double)kd/100;
+//		me.Kp[0]=(double)kp/100;
+//		me.Kd[0]=(double)kd/100;
+		setPiancha1(kpi/100);
 	}
  if(ki==4)
  {
-	 me.Kp[1]=(double)kp/100;
-	 me.Kd[1]=(double)kd/100;
+//	 me.Kp[1]=(double)kp/100;
+//	 me.Kd[1]=(double)kd/100;
+	 setPiancha2(kpi/100);
  }
  if(ki==5)
  {
-	 me.Kp[2]=(double)kp/100;
-	 me.Kd[2]=(double)kd/100;
+//	 me.Kp[2]=(double)kp/100;
+//	 me.Kd[2]=(double)kd/100;
+	 setPiancha3(kpi/100);
  }
  if(ki==6)
  {
-	 me.Kp[3]=(double)kp/100;
-	 me.Kd[3]=(double)kd/100;
+//	 me.Kp[3]=(double)kp/100;
+//	 me.Kd[3]=(double)kd/100;
+	 setPiancha4(kpi/100);
  }
  if(ki==7)
  {

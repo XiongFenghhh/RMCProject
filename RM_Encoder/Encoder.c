@@ -218,6 +218,7 @@ void Encoder_TIM4_Init(void)
 void Encoder_TIM5_Init(void)
 {
 	GPIO_InitTypeDef GPIO_TypeDefine;
+	 TIM_ICInitTypeDef TIM_ICInitStructure;
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5,ENABLE);
 
@@ -226,13 +227,18 @@ void Encoder_TIM5_Init(void)
 	GPIO_TypeDefine.GPIO_OType = GPIO_OType_PP;
 	GPIO_TypeDefine.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_TypeDefine.GPIO_Speed = GPIO_Speed_100MHz;
+//	GPIO_TypeDefine.GPIO_Mode = GPIO_Mode_IN;
+//	GPIO_TypeDefine.GPIO_PuPd=GPIO_PuPd_NOPULL;
 	GPIO_Init(GPIOA,&GPIO_TypeDefine);
 
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource0,  GPIO_AF_TIM5);
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource1,  GPIO_AF_TIM5);
-
+	 TIM_DeInit(TIM5);
 	TIM_EncoderInterfaceConfig(TIM5, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
 	//Reset counter£¬From 0x8000
+	TIM_ICStructInit(&TIM_ICInitStructure);
+    TIM_ICInitStructure.TIM_ICFilter = 6;         //?????
+    TIM_ICInit(TIM5, &TIM_ICInitStructure);
 	TIM_SetCounter(TIM5,0x8000);
 	TIM_Cmd(TIM5, ENABLE);
 }

@@ -152,9 +152,20 @@ void SysTick_Handler(void)
 	itTimes=itTimes%8;
 	Encoder_Get();
 
-
 if(itTimes%2==0){	
-	
+	if(setXSpeed-40>realXSpeed)
+	{
+		if(setXSpeed==0)realXSpeed+=35;
+		else realXSpeed+=35;
+	}
+	else if(setXSpeed+40<realXSpeed)
+	{
+		if(setXSpeed==0)realXSpeed-=35;
+		else realXSpeed-=35;
+	}
+		
+		
+	else realXSpeed=setXSpeed;
 	/*we might use the first dimension of errors to implement differential controll*/
 	me.errors[0][0]=me.errors[0][1];
 	me.errors[1][0]=me.errors[1][1];
@@ -166,6 +177,18 @@ if(itTimes%2==0){
 	me.errors[2][1]=me.rotation_fil[2];//-encoder_cnt[2]/1024*60;
 	me.errors[3][1]=me.rotation_fil[3];//-encoder_cnt[3]/1024*60;
 	
+}else{
+if(setYSpeed-40>realYSpeed)
+{
+	if(setYSpeed==0)realYSpeed+=35;
+	else realYSpeed+=35;
+}else if(setYSpeed+20<realYSpeed)
+	{
+		if(setYSpeed==0)realYSpeed-=15;
+		else realYSpeed-=35;
+	}
+	else realYSpeed=setYSpeed;
+
 }
 	
 	/**

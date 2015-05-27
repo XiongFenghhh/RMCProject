@@ -60,8 +60,8 @@ void CalcRotations(void)
 	preR1[3]=preR1[4];
 	preR1[4]=me.rotation[0];
 	//n1=-vx/(pi*D*tan(alpha))-vy/(pi*D)+vw*£¨lf-lw*tan(alpha))/(2*pi*D*tan(alpha))
-	/*pwm3 on board blue:-,-,-*/	/*red:+,+,+*/
-me.rotation[0]= getXvelocity() / xRatio+getYvelocity() /yRatio+getWvelocity() *wRatio ;
+	//No3:+++//No4-++
+me.rotation[0]= -getXvelocity() / xRatio+getYvelocity() /yRatio+getWvelocity() *wRatio ;
 me.rotation[0] = ( 60 * me.rotation[0] ) ;
 me.rotation_fil[0]=0.1*(preR1[0]+preR1[2]+preR1[3]+preR1[4]+preR1[1])+me.rotation[0]*0.5;
 
@@ -70,8 +70,9 @@ me.rotation_fil[0]=0.1*(preR1[0]+preR1[2]+preR1[3]+preR1[4]+preR1[1])+me.rotatio
 	preR2[2]=preR2[3];
 	preR2[3]=preR2[4];
 	preR2[4]=me.rotation[1];
-	//n2=vx/(pi*D*tan(alpha))+vy/(pi*D)+£¨-lf-lw*tan(alpha))/(2*pi*D*tan(alpha))blue:+,-,+ /red+,-, +
-me.rotation[1]= getXvelocity() / xRatio-getYvelocity() / yRatio+getWvelocity() * wRatio;
+	//n2=vx/(pi*D*tan(alpha))+vy/(pi*D)+£¨-lf-lw*tan(alpha))/(2*pi*D*tan(alpha))
+	//No3:+-+//No4:--+
+me.rotation[1]= -getXvelocity() / xRatio-getYvelocity() / yRatio+getWvelocity() * wRatio;
 me.rotation[1]=(60*me.rotation[1]);
 me.rotation_fil[1]=0.1*(preR2[0]+preR2[2]+preR2[3]+preR2[4]+preR2[1])+me.rotation[1]*0.5;
 	
@@ -82,8 +83,8 @@ me.rotation_fil[1]=0.1*(preR2[0]+preR2[2]+preR2[3]+preR2[4]+preR2[1])+me.rotatio
 	preR3[3]=preR3[4];
 	preR3[4]=me.rotation[2];
 	//n3=vx/(pi*D*tan(alpha))+vy/(pi*D)+£¨lf-lw*tan(alpha))/(2*pi*D*tan(alpha)) /red:-,+,-
-	//4.14 change the sign of y for left behind blue:-,+,-
-me.rotation[2]=-getXvelocity() /xRatio-getYvelocity() /yRatio+getWvelocity() *wRatio;
+	//No3:--+//No4:+-+
+me.rotation[2]=getXvelocity() /xRatio-getYvelocity() /yRatio+getWvelocity() *wRatio;
 me.rotation[2]=(60*me.rotation[2]);
 me.rotation_fil[2]=0.1*(preR3[0]+preR3[2]+preR3[3]+preR3[4]+preR3[1])+me.rotation[2]*0.5;
 
@@ -92,8 +93,9 @@ me.rotation_fil[2]=0.1*(preR3[0]+preR3[2]+preR3[3]+preR3[4]+preR3[1])+me.rotatio
 	preR4[2]=preR4[3];
 	preR4[3]=preR4[4];
 	preR4[4]=me.rotation[3];
-	//n4=vx/(pi*D*tan(alpha))-vy/(pi*D)+£¨lf+lw*tan(alpha))/(2*pi*D*tan(alpha))blue:-,-,- red:+++
-me.rotation[3]=-getXvelocity() / xRatio+getYvelocity() / yRatio+getWvelocity() * wRatio;
+	//n4=vx/(pi*D*tan(alpha))-vy/(pi*D)+£¨lf+lw*tan(alpha))/(2*pi*D*tan(alpha))
+	//No3:-++//No4:+++
+me.rotation[3]=getXvelocity() / xRatio+getYvelocity() / yRatio+getWvelocity() * wRatio;
 me.rotation[3]=(60*me.rotation[3]);
 me.rotation_fil[3]=0.1*(preR4[0]+preR4[1]+preR4[2]+preR4[3]+preR4[4])+me.rotation[3]*0.5;
 
@@ -110,7 +112,7 @@ Output£º OutputControl£¬error
 return£ºÎÞ
 ****************************************/
 #define pwmMax 980
-#define pwmMin 20
+#define pwmMin 0
 #define pwmMiddle 250
 void PIDAlgorithm(void)
 {
@@ -119,13 +121,13 @@ maxAbs=abs(me.errors[0][1]);
 if(abs(me.errors[1][1])>maxAbs)maxAbs=abs(me.errors[1][1]);
 if(abs(me.errors[2][1])>maxAbs)maxAbs=abs(me.errors[2][1]);
 if(abs(me.errors[3][1])>maxAbs)maxAbs=abs(me.errors[3][1]);
-	if(maxAbs>250)
+	if(maxAbs>200)
 	{
-		me.errors[0][1]/=(maxAbs/250);
-		me.errors[1][1]/=(maxAbs/250);
-		me.errors[2][1]/=(maxAbs/250);
-		me.errors[3][1]/=(maxAbs/250);
-	}else if(maxAbs<18)
+		me.errors[0][1]/=(maxAbs/200);
+		me.errors[1][1]/=(maxAbs/200);
+		me.errors[2][1]/=(maxAbs/200);
+		me.errors[3][1]/=(maxAbs/200);
+	}else if(maxAbs<5)
 	{
 		batholithResetPwm();
 	}else
@@ -142,7 +144,7 @@ if(abs(me.errors[3][1])>maxAbs)maxAbs=abs(me.errors[3][1]);
 void PIDAlgorithm1(void)
 {
 	
-	me.Kp[0]=0.9;
+	me.Kp[0]=1;
 
 	me.pwm[0]=(me.errors[0][1]+pwmMiddle)<pwmMin?pwmMin:(me.Kp[0]*(me.errors[0][1])+pwmMiddle)/500*1000;
 	me.pwm[0]=me.pwm[0]>pwmMax?pwmMax:me.pwm[0];
@@ -151,7 +153,7 @@ void PIDAlgorithm1(void)
 
 void PIDAlgorithm2(void)
 {
-	me.Kp[1]=0.9;
+	me.Kp[1]=1;
 
 	me.pwm[1]=(me.errors[1][1]+pwmMiddle)<pwmMin?pwmMin:(me.Kp[1]*(me.errors[1][1])+pwmMiddle)/500*1000;
 	me.pwm[1]=me.pwm[1]>pwmMax?pwmMax:me.pwm[1];
@@ -161,7 +163,7 @@ void PIDAlgorithm2(void)
 void PIDAlgorithm3(void)
 {
 
-	me.Kp[2]=0.9;
+	me.Kp[2]=1;
 
 	me.pwm[2]=(me.errors[2][1]+pwmMiddle)<pwmMin?pwmMin:(me.Kp[2]*(me.errors[2][1])+pwmMiddle)/500*1000;
 	me.pwm[2]=me.pwm[2]>pwmMax?pwmMax:me.pwm[2]; 
@@ -170,7 +172,7 @@ void PIDAlgorithm3(void)
 void PIDAlgorithm4(void)
 {
 
-	me.Kp[3]=0.9;
+	me.Kp[3]=1;
 
 	me.pwm[3]=(me.errors[3][1]+pwmMiddle)<pwmMin?pwmMin:(me.Kp[3]*(me.errors[3][1])+pwmMiddle)/500*1000;
 	me.pwm[3]=me.pwm[3]>pwmMax?pwmMax:me.pwm[3];

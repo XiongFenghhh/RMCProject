@@ -1,4 +1,5 @@
 #include "RemoteController.h"
+#define IsForwardBackwardChange ()
 static unsigned char sbus_rx_buffer[18];
 static struct RC_Ctl_t RC_Ctl;
 
@@ -131,10 +132,12 @@ void RC_Receive(void){
 				RC_Ctl.key.ctrl = (RC_Ctl.key.v & 0x0020)==0?0:1;
 				RC_Ctl.key.leftTurn = (RC_Ctl.key.v & RC_Ctl.setKey.leftturn)==0?0:1;
 				RC_Ctl.key.rightTurn = (RC_Ctl.key.v & RC_Ctl.setKey.rightturn)==0?0:1;
-				RC_Ctl.velocity.vel=RC_Ctl.key.shift==1?1450:1200;
+				RC_Ctl.key.shift = (RC_Ctl.key.v & 0x0010)==0?0:1;
+				RC_Ctl.velocity.vel=RC_Ctl.key.shift==1?1500:1100;	
 				isfbSpeedUp=RC_Ctl.key.forward+RC_Ctl.key.backward;
 				islrSpeedUp=RC_Ctl.key.leftward+RC_Ctl.key.rightward;
 }
+
 
 
 /**
@@ -149,12 +152,12 @@ void RC_Convert(void){
 	{
 	if((RC_Ctl.rc.ch0-1024)*(RC_Ctl.rc.ch0-1024)+(RC_Ctl.rc.ch1-1024)*(RC_Ctl.rc.ch1-1024)>680*680)
 	{
-	RC_Ctl.velocity.x=(double)(RC_Ctl.rc.ch0-1024)/sqrtf((RC_Ctl.rc.ch0-1024)*(RC_Ctl.rc.ch0-1024)+(RC_Ctl.rc.ch1-1024)*(RC_Ctl.rc.ch1-1024))*1600;
-	RC_Ctl.velocity.y=(double)(RC_Ctl.rc.ch1-1024)/sqrtf((RC_Ctl.rc.ch0-1024)*(RC_Ctl.rc.ch0-1024)+(RC_Ctl.rc.ch1-1024)*(RC_Ctl.rc.ch1-1024))*1600;
+	setXSpeed=(double)(RC_Ctl.rc.ch0-1024)/sqrtf((RC_Ctl.rc.ch0-1024)*(RC_Ctl.rc.ch0-1024)+(RC_Ctl.rc.ch1-1024)*(RC_Ctl.rc.ch1-1024))*1600;
+	setYSpeed=(double)(RC_Ctl.rc.ch1-1024)/sqrtf((RC_Ctl.rc.ch0-1024)*(RC_Ctl.rc.ch0-1024)+(RC_Ctl.rc.ch1-1024)*(RC_Ctl.rc.ch1-1024))*1600;
 	}else
 	{
-	RC_Ctl.velocity.x=(double)(RC_Ctl.rc.ch0-1024)/660*1600;
-	RC_Ctl.velocity.y=(double)(RC_Ctl.rc.ch1-1024)/660*1600;
+	setXSpeed=(double)(RC_Ctl.rc.ch0-1024)/660*1600;
+	setYSpeed=(double)(RC_Ctl.rc.ch1-1024)/660*1600;
 	}
 	RC_Ctl.velocity.w=(double)(RC_Ctl.rc.ch2-1024)/660*2;
 	me.isStart=1;
@@ -164,50 +167,31 @@ void RC_Convert(void){
 	{
 			RC_Ctl.velocity.w=0;
 			/**==========================Forward and BackWard Control=======================**/	
-			if(isfbSpeedUp!=0)
-			{
-					fbSpeedRatio=0.2;
+			
 					if(RC_Ctl.key.forward==1)
 						{
-							RC_Ctl.velocity.y+= fbSpeedRatio*RC_Ctl.velocity.vel;
-							if(RC_Ctl.velocity.y>RC_Ctl.velocity.vel)RC_Ctl.velocity.y=RC_Ctl.velocity.vel;
+							setYSpeed=RC_Ctl.velocity.vel;
 						}
-					if(RC_Ctl.key.backward==1)
+					else if(RC_Ctl.key.backward==1)
 						{
-							RC_Ctl.velocity.y+= -fbSpeedRatio*RC_Ctl.velocity.vel;
-							if(RC_Ctl.velocity.y<-RC_Ctl.velocity.vel)RC_Ctl.velocity.y=-RC_Ctl.velocity.vel;
+							setYSpeed=-RC_Ctl.velocity.vel;
 						}
-						fbSpeedRatio=0;
-			}else
-			{
-					fbSpeedRatio=0.5;
-					RC_Ctl.velocity.y*=fbSpeedRatio;
-					if(abs(RC_Ctl.velocity.y)<200)RC_Ctl.velocity.y=0;
-					fbSpeedRatio=0;
-			}
+					else setYSpeed=0;	
+			
+			
 			/**=====================Left and Right Control===============================**/
 				
-			if(islrSpeedUp!=0)
-			{
-				lrSpeedRatio=0.2;
+			
 				if(RC_Ctl.key.leftward==1)
 					{
-						RC_Ctl.velocity.x+=-lrSpeedRatio*RC_Ctl.velocity.vel;
-						if(RC_Ctl.velocity.x<-RC_Ctl.velocity.vel)RC_Ctl.velocity.x=-RC_Ctl.velocity.vel;
+						setXSpeed=-RC_Ctl.velocity.vel*0.8;
 					}
-				if(RC_Ctl.key.rightward==1)
+				else if(RC_Ctl.key.rightward==1)
 					{
-						RC_Ctl.velocity.x+= lrSpeedRatio*RC_Ctl.velocity.vel;
-						if(RC_Ctl.velocity.x>RC_Ctl.velocity.vel)RC_Ctl.velocity.x=RC_Ctl.velocity.vel;
+						setXSpeed=RC_Ctl.velocity.vel*0.8;
 					}
-				lrSpeedRatio=0;
-			}else
-			{
-				lrSpeedRatio=0.5;
-				RC_Ctl.velocity.x*=lrSpeedRatio;
-				if(abs(RC_Ctl.velocity.x)<200)RC_Ctl.velocity.x=0;
-				lrSpeedRatio=0;
-			}
+				else setXSpeed=0;
+			
 			/**==========================Rotation Control=================================**/
 				if(RC_Ctl.key.leftTurn==1)
 				{
@@ -217,7 +201,7 @@ void RC_Convert(void){
 				{
 					RC_Ctl.velocity.w+=1;
 				}
-				RC_Ctl.velocity.w+=RC_Ctl.mouse.x>84?1.4:RC_Ctl.mouse.x<(-84)?(-1.4):(double)(RC_Ctl.mouse.x)/60;
+				RC_Ctl.velocity.w+=RC_Ctl.mouse.x>84?1.4:RC_Ctl.mouse.x<(-84)?(-1.4):(double)(RC_Ctl.mouse.x)/40;
 
 				me.isStart=1;
 			
@@ -251,8 +235,8 @@ setIsAutoTargetMode(RC_Ctl.key.ctrl);
 setYunTaiPosition(getYunTaiDeltaPositionPitch(),getYunTaiDeltaPositionYaw());	
 
 }
-double getYvelocity(void){return RC_Ctl.velocity.y;}
-double getXvelocity(void){return RC_Ctl.velocity.x;}
+double getYvelocity(void){return realYSpeed;}
+double getXvelocity(void){return realXSpeed;}
 double getWvelocity(void){return RC_Ctl.velocity.w;}
 uint32_t getBMPWM(void){return RC_Ctl.velocity.BMPWM;}
 uint8_t isStepperMoving(void){return RC_Ctl.velocity.isStepperMoving;}
@@ -271,9 +255,9 @@ double getYunTaiDeltaPositionYaw(void){
 
 double getYunTaiDeltaPositionPitch(void){
 	
-	if((RC_Ctl.mouse.y>5&&RC_Ctl.mouse.y<=80)||(RC_Ctl.mouse.y<-5&&RC_Ctl.mouse.y>=-80))
-		return (double)(0.25*preMouseY[0] +0.25*preMouseY[1] +0.5*RC_Ctl.mouse.y)/160;
-	else if(RC_Ctl.mouse.y<15&&RC_Ctl.mouse.y>-15)return 0;
+	if(RC_Ctl.mouse.y<=80&&RC_Ctl.mouse.y>=-80)
+		return (double)(0.2*preMouseY[1] +0.8*RC_Ctl.mouse.y)/160;
+//	else if(RC_Ctl.mouse.y<15&&RC_Ctl.mouse.y>-15)return 0;
 	else return 0.5;
 }
 uint16_t isYunTaiYawMoving(void){

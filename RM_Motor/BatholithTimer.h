@@ -8,4 +8,8 @@ void batholithSetPwm(void);
 void batholithResetPwm(void);
 void setDeadTime(uint8_t);
 uint8_t getDeadTime();
+void setPiancha1(int);
+void setPiancha2(int);
+void setPiancha3(int);
+void setPiancha4(int);
 #endif

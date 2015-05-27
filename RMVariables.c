@@ -2,13 +2,13 @@
 struct MotorEngine me;
 MPU6050_RAW_DATA    MPU6050_Raw_Data; 
 MPU6050_REAL_DATA   MPU6050_Real_Data;
-uint8_t isSpeedUp=0;
-uint8_t isStopping=0;
-uint8_t isfbSpeedModify=0;
-uint8_t islrSpeedModify=0;
 int16_t encoder_cnt[4]={0};
 double fbSpeedRatio=0;
 double lrSpeedRatio=0;
+ double setXSpeed;
+ double realXSpeed;
+double setYSpeed;
+ double realYSpeed;
 void delay_ms(uint16_t t){
 int i;
 	for( i=0;i<t;i++)
@@ -22,11 +22,11 @@ void RM_Init(void){
 	RmBatholicTIM_PWM_Config();
 	MotorEngine_Config();
 	RC_Init();
-	Encoder_Init();
 	Stepper_Init();
 	BMotor_Init();
 	CAN1_Mode_Init(CAN_SJW_1tq,CAN_BS2_4tq,CAN_BS1_9tq,3,CAN_Mode_Normal);
 	USART3_Configuration();
+	Encoder_Init();
 	
 	//following functions is mainly for debugging purpose
 	

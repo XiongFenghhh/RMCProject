@@ -34,7 +34,11 @@ typedef struct __MPU6050_REAL_Data__  MPU6050_REAL_DATA;
 extern struct MotorEngine me;
 extern  MPU6050_RAW_DATA    MPU6050_Raw_Data; 
 extern  MPU6050_REAL_DATA   MPU6050_Real_Data;
-
+extern uint8_t isSpeedUp;
+extern double setXSpeed;
+extern double realXSpeed;
+extern double setYSpeed;
+extern double realYSpeed;
 
 
 
