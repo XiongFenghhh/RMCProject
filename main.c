@@ -31,6 +31,7 @@ int i=0;
    RM_InterruptInit();
 	 
 	while(1){
+
 		RC_Receive();
 		RC_Convert();
 	if(me.isStart)

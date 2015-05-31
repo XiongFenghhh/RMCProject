@@ -22,11 +22,98 @@ Dialog DLL:      TCM.DLL V1.14.4.0
  
 <h2>Project:</h2>
 H:\robomaster\robomasterFunc\RMCProject\RMCProject.uvprojx
-Project File Date:  05/28/2015
+Project File Date:  05/31/2015
 
 <h2>Output:</h2>
 Build target 'RMPRoject'
-".\Objects\RMCProject.axf" - 0 Error(s), 0 Warning(s).
+compiling BatholithTimer.c...
+compiling MotorEngine.c...
+compiling RemoteController.c...
+RM_Remoter\RemoteController.c(5): warning:  #550-D: variable "preMouseY" was set but never used
+  static double preMouseY;
+RM_Remoter\RemoteController.c(6): warning:  #550-D: variable "preMouseX" was set but never used
+  static double preMouseX;
+RM_Remoter\RemoteController.c: 2 warnings, 0 errors
+compiling Encoder.c...
+compiling app.c...
+compiling can.c...
+RM_Yuntai\can.c(4): warning:  #550-D: variable "prewanted_p" was set but never used
+  static double prewanted_p=4000;//ps:5500 ss:4000
+RM_Yuntai\can.c(6): warning:  #550-D: variable "prewanted_y" was set but never used
+  static double prewanted_y=4200;//ps:5000 ss:3000
+RM_Yuntai\can.c(30): warning:  #550-D: variable "pre_position_203" was set but never used
+  static int pre_position_203;
+RM_Yuntai\can.c: 3 warnings, 0 errors
+compiling stepper.c...
+compiling brushlessMotor.c...
+compiling usart3.c...
+RM_Yuntai\usart3.c(59): warning:  #177-D: variable "adjust_flag" was declared but never referenced
+  static uint8_t adjust_flag = 1;
+RM_Yuntai\usart3.c(66): warning:  #550-D: variable "moto_num" was set but never used
+  static uint8_t moto_num;
+RM_Yuntai\usart3.c(68): warning:  #177-D: variable "head" was declared but never referenced
+  static uint8_t head=0x7e;
+RM_Yuntai\usart3.c(70): warning:  #177-D: variable "special2" was declared but never referenced
+  static uint8_t special2=0;
+RM_Yuntai\usart3.c(71): warning:  #177-D: variable "change" was declared but never referenced
+  static uint8_t change=0;
+RM_Yuntai\usart3.c: 5 warnings, 0 errors
+compiling main.c...
+main.c(91): warning:  #111-D: statement is unreachable
+  return 0;
+main.c: 1 warning, 0 errors
+compiling stm32f4xx_it.c...
+compiling RMVariables.c...
+compiling RMflash.c...
+compiling mpu6050_driver.c...
+RM_Posture\mpu6050_driver.c(198): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          MPU6050_Real_Data.Accel_X = -(float)(MPU6050_Raw_Data.Accel_X)/8192.0; //见datasheet 30 of 47
+RM_Posture\mpu6050_driver.c(199): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          MPU6050_Real_Data.Accel_Y = -(float)(MPU6050_Raw_Data.Accel_Y)/8192.0; //见datasheet 30 of 47
+RM_Posture\mpu6050_driver.c(200): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          MPU6050_Real_Data.Accel_Z = (float)(MPU6050_Raw_Data.Accel_Z)/8192.0; //见datasheet 30 of 47
+RM_Posture\mpu6050_driver.c(201): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          MPU6050_Real_Data.Temp =   (float)(MPU6050_Raw_Data.Temp)/340.0+36.53;//见datasheet 31 of 47
+RM_Posture\mpu6050_driver.c(202): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          MPU6050_Real_Data.Gyro_X = -(float)(MPU6050_Raw_Data.Gyro_X - gyroADC_X_offset)/65.5;     //见datasheet 32 of 47
+RM_Posture\mpu6050_driver.c(203): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          MPU6050_Real_Data.Gyro_Y = -(float)(MPU6050_Raw_Data.Gyro_Y - gyroADC_Y_offset)/65.5;     //见datasheet 32 of 47
+RM_Posture\mpu6050_driver.c(204): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          MPU6050_Real_Data.Gyro_Z = (float)(MPU6050_Raw_Data.Gyro_Z - gyroADC_Z_offset)/65.5;     //见datasheet 32 of 47
+RM_Posture\mpu6050_driver.c(231): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        x_temp=x_temp/1000.00;
+RM_Posture\mpu6050_driver.c(232): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        y_temp=y_temp/1000.00;  
+RM_Posture\mpu6050_driver.c(233): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        z_temp=z_temp/1000.00;
+RM_Posture\mpu6050_driver.c: 10 warnings, 0 errors
+compiling mpu6050_i2c.c...
+compiling mpu6050_interrupt.c...
+compiling mpu6050_process.c...
+RM_Posture\mpu6050_process.c(51): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      Accel_Raw_Average_Data.X = (float)temp_accel_x / 10.0;
+RM_Posture\mpu6050_process.c(52): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      Accel_Raw_Average_Data.Y = (float)temp_accel_y / 10.0;
+RM_Posture\mpu6050_process.c(53): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      Accel_Raw_Average_Data.Z = (float)temp_accel_z / 10.0;
+RM_Posture\mpu6050_process.c(91): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      accel_x = accel_x *0.02 + pre_ax * 0.98;//cyq:0.02
+RM_Posture\mpu6050_process.c(91): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      accel_x = accel_x *0.02 + pre_ax * 0.98;//cyq:0.02
+RM_Posture\mpu6050_process.c(94): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      accel_y = accel_y *0.02 + pre_ay * 0.98;
+RM_Posture\mpu6050_process.c(94): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      accel_y = accel_y *0.02 + pre_ay * 0.98;
+RM_Posture\mpu6050_process.c(97): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      accel_z = accel_z *0.02 + pre_az * 0.98;
+RM_Posture\mpu6050_process.c(97): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      accel_z = accel_z *0.02 + pre_az * 0.98;
+RM_Posture\mpu6050_process.c(134): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      MPU6050_Angle.Yaw = atan2( 2 * q1 * q2 + 2 * q0 * q3,1.0 - 2.0 * ( q2 * q2 + q3 * q2 ) ) * (180.0/3.14159265);//不准
+RM_Posture\mpu6050_process.c: 10 warnings, 0 errors
+linking...
+Program Size: Code=38052 RO-data=756 RW-data=512 ZI-data=1712  
+".\Objects\RMCProject.axf" - 0 Error(s), 31 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   H:\robomaster\robomasterFunc\RMCProject\RTE
