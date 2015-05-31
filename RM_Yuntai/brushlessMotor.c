@@ -38,7 +38,9 @@ void BMotor_Init(void)
     GPIO_Init(GPIOE,&gpio);
   
 		gpio.GPIO_Pin=GPIO_Pin_10;
+		gpio.GPIO_Mode= GPIO_Mode_OUT;
 		gpio.GPIO_Speed=GPIO_Speed_100MHz;
+		gpio.GPIO_PuPd=GPIO_PuPd_UP;
 		GPIO_Init(GPIOC,&gpio);
 	
     GPIO_PinAFConfig(GPIOE,GPIO_PinSource5, GPIO_AF_TIM9);
@@ -60,8 +62,6 @@ void BMotor_Init(void)
     oc.TIM_Pulse = 200;
     oc.TIM_OCPolarity = TIM_OCPolarity_Low;
     oc.TIM_OCNPolarity = TIM_OCPolarity_High;
-  //  oc.TIM_OCIdleState = TIM_OCIdleState_Reset;
-  //  oc.TIM_OCNIdleState = TIM_OCIdleState_Set;
     TIM_OC1Init(TIM9,&oc);
     TIM_OC2Init(TIM9,&oc);
     
@@ -69,11 +69,26 @@ void BMotor_Init(void)
     TIM_OC2PreloadConfig(TIM9,TIM_OCPreload_Enable);
            
     TIM_ARRPreloadConfig(TIM9,ENABLE);
-    
-  //  TIM_CtrlPWMOutputs(TIM9,ENABLE);
-    
-    TIM_Cmd(TIM9,ENABLE);
 }
+/**
+*@description Enable Timer9 
+*@para	 none
+*@retVal none
+*/
+void brushLessEnable(void)
+{
+	TIM_Cmd(TIM9,ENABLE);
+}
+/**
+*@description Disable Timer9 
+*@para	 none
+*@retVal none
+*/
+void brushLessDisable(void)
+{
+	TIM_Cmd(TIM9,DISABLE);
+}
+
 /*****************************************************************
 º¯Êý£º  void BMoror_PWM(void)
 ¹¦ÄÜ£º  PWM control bruthless motor

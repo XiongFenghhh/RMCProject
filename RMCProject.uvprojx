@@ -363,7 +363,7 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_STDPERIPH_DRIVER,DATA_IN_ExtSDRAM,STM32F429_439xx,Shooter1</Define>
+              <Define>USE_STDPERIPH_DRIVER,STM32F429_439xx,Shooter1</Define>
               <Undefine></Undefine>
               <IncludePath>..\RMCProject;.\RM_Encoder;.\RM_Motor;.\RM_Remoter;.\RM_Debug;.\RM_Yuntai;.\STM32F4xx\Include;.\STM32F4xx_StdPeriph_Driver\inc;.\CMSIS\Include;.\STM32F429I-Discovery;.\RM_Posture</IncludePath>
             </VariousControls>

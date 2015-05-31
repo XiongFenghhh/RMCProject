@@ -2,8 +2,8 @@
 #ifdef Shooter1
 static double wanted_p=4000;//ps:5500 ss:4000
 static double prewanted_p=4000;//ps:5500 ss:4000
-static double wanted_y=4000;//ps:5000 ss:3000
-static double prewanted_y=4000;//ps:5000 ss:3000
+static double wanted_y=4200;//ps:5000 ss:3000
+static double prewanted_y=4200;//ps:5000 ss:3000
 #endif
 #ifdef Shooter2
 static double wanted_p=4000;//ps:5500 ss:4000
@@ -126,8 +126,8 @@ void CAN1_RX0_IRQHandler(void)
         {             
              //获得云台电机0x201的码盘值
            current_position_201 = (rx_message.Data[0]<<8) | rx_message.Data[1];		
-				 pWord[0] = rx_message.Data[1];
-					 pWord[1] = rx_message.Data[0];	
+//				   pWord[0] = rx_message.Data[1];
+//					 pWord[1] = rx_message.Data[0];
         }
         if(rx_message.StdId == 0x202)
         { 
@@ -140,38 +140,38 @@ void CAN1_RX0_IRQHandler(void)
              //获得云台电机0x203的码盘值
 					//@modified by huangmin on 2015.04.25
 				  current_203 = (rx_message.Data[2]<<8) | rx_message.Data[3];
-					
+//					pWord[2] = rx_message.Data[3];
+//					pWord[3] = rx_message.Data[2];
 					//@modified by huangmin on 2015.04.17
 					current_position_203 = (rx_message.Data[0]<<8) | rx_message.Data[1];
-					pWord[2] = rx_message.Data[3];
-					pWord[3] = rx_message.Data[2];
-         
+//					pWord[4] = rx_message.Data[1];
+//				  pWord[5] = rx_message.Data[0];
+          vscope_en = 1;
         }
         
 	
-//				wanted_p=wanted_p*0.9+prewanted_p*0.1;
-//				wanted_y=wanted_y*0.9+prewanted_y*0.1;
-			//必须要加上中心值
-			
-				if(wanted_p>5000)			 wanted_p=5000;//ss:4500 ps:6000
-				else if(wanted_p<3500) wanted_p=3500;//ss:3500 ps:5000
-				if(wanted_y>4000)      wanted_y=4000;//ss:4000 ps:5500
-				else if(wanted_y<2000) wanted_y=2000;//ss:2000 ps:4500
+		
+if(yunTaiProtectionMode==0){				
 		//do the mannual control if not in auto mode		
     if(isAutoTargetMode==0)
 		{
-			if(abs(RC_Ctl.mouse.x)<1)
-			{
+			
+
+		 //if(abs(RC_Ctl.mouse.x)<1)
+			 // wanted_y = wanted_y ;
+			// else 
+			  wanted_y = 4200; 
+		 
+			if(wanted_p>4800)			 wanted_p=4800;//ss:4500 ps:6000
+				else if(wanted_p<3800) wanted_p=3800;//ss:3500 ps:5000
+				if(wanted_y>6000)      wanted_y=6000;//ss:4000 ps:5500
+				else if(wanted_y<2000) wanted_y=2000;//ss:2000 ps:4500
+			
 			Cmd_ESC((int16_t)Position_Control_201(current_position_201,wanted_p ),
 																																					0,
 			(int16_t)Position_Control_203(current_position_203,wanted_y,0));//仅有位置环
-			}else
-			{
-				Cmd_ESC((int16_t)Position_Control_201(current_position_201,wanted_p ),
-																																					0,
-			(int16_t)Position_Control_203(current_position_203,current_position_203+(RC_Ctl.mouse.x)/60,0));//仅有位置环
-			}
-			RC_Ctl.velocity.w = followControl(current_position_203);
+
+		//		RC_Ctl.velocity.w = followControl(current_position_203);
 /**============================================================**/		
 //			Cmd_ESC((int16_t)Position_Control_201(current_position_201,wanted_p ),
 //																																					0,
@@ -213,6 +213,12 @@ void CAN1_RX0_IRQHandler(void)
 prewanted_y=wanted_y;
 pre_position_203=current_position_203;
 				}
+else{
+				Cmd_ESC((int16_t)Position_Control_201(current_position_201,current_position_201 ),
+																																					0,
+			(int16_t)Position_Control_203(current_position_203,current_position_203,0));
+			}
+			}
 	  CAN_FIFORelease(CAN1,CAN_FIFO0);//@modified by huangmin on 2015.04.17
 	CAN_ITConfig(CAN1,CAN_IT_FMP0,ENABLE);//FIFO0消息挂号中断允许.  
 	  

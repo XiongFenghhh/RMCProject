@@ -12,7 +12,7 @@
 #include "RMVariables.h"
 extern void Stepper_Init(void);
 extern void	Stepper_Ctrl(uint8_t);
-
+void stepperDisable(void);
 void Stepper_Write(GPIO_TypeDef* GPIOx, uint16_t value);
 
 #endif

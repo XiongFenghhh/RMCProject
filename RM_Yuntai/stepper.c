@@ -34,6 +34,15 @@ void Stepper_Init(void)
 	gpio.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOD,&gpio);
 }
+/**
+*@description disable stepper
+*@para none
+*@retVal none
+*/
+void stepperDisabble(void)
+{
+	GPIO_ResetBits(GPIOD,GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3);
+}
 
 
 /*****************************************************************

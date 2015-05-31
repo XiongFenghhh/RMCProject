@@ -35,13 +35,22 @@ extern struct MotorEngine me;
 extern  MPU6050_RAW_DATA    MPU6050_Raw_Data; 
 extern  MPU6050_REAL_DATA   MPU6050_Real_Data;
 extern uint8_t isSpeedUp;
+
 extern double setXSpeed;
 extern double realXSpeed;
 extern double setYSpeed;
 extern double realYSpeed;
+extern double setWSpeed;
+extern double preX;
+extern double preY;
+extern uint8_t yunTaiProtectionMode;
+extern double Kp;
+extern double Ki;
+extern double Kd;
+
 extern struct RC_Ctl_t RC_Ctl;
 extern unsigned char pWord[10];
-
+extern unsigned char vscope_en;
 
 extern int16_t encoder_cnt[4];
 
@@ -52,5 +61,6 @@ void delay_ms(uint16_t);
 */
 void RM_Init(void);
 void RM_InterruptInit(void);
+void RM_SystemSwitch(uint8_t);
 
 #endif

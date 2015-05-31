@@ -1,0 +1,80 @@
+﻿Merge remote-tracking branch 'origin/XiongFeng' into XiongFeng
+
+Conflicts:
+	Objects/batholithtimer.crf
+	Objects/encoder.crf
+	Objects/main.crf
+	Objects/motorengine.crf
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch XiongFeng
+# Your branch and 'origin/XiongFeng' have diverged,
+# and have 1 and 1 different commit each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   .gitignore
+#	modified:   "C\345\267\245\347\250\213_readme.docx"
+#	deleted:    Listings/RMCProject.map
+#	deleted:    Listings/startup_stm32f429_439xx.lst
+#	deleted:    Objects/RMCProject.axf
+#	deleted:    Objects/RMCProject.build_log.htm
+#	deleted:    Objects/RMCProject.htm
+#	deleted:    Objects/RMCProject.lnp
+#	deleted:    Objects/RMCProject_RMPRoject.dep
+#	modified:   Objects/app.crf
+#	modified:   Objects/batholithtimer.crf
+#	modified:   Objects/brushlessmotor.crf
+#	modified:   Objects/can.crf
+#	modified:   Objects/encoder.crf
+#	modified:   Objects/main.crf
+#	modified:   Objects/misc.crf
+#	modified:   Objects/motorengine.crf
+#	modified:   Objects/mpu6050_driver.crf
+#	modified:   Objects/mpu6050_i2c.crf
+#	modified:   Objects/mpu6050_interrupt.crf
+#	modified:   Objects/mpu6050_process.crf
+#	modified:   Objects/remotecontroller.crf
+#	modified:   Objects/rmflash.crf
+#	modified:   Objects/rmvariables.crf
+#	modified:   Objects/stepper.crf
+#	modified:   Objects/stm32f4xx_adc.crf
+#	modified:   Objects/stm32f4xx_can.crf
+#	modified:   Objects/stm32f4xx_dac.crf
+#	modified:   Objects/stm32f4xx_dma.crf
+#	modified:   Objects/stm32f4xx_dma2d.crf
+#	modified:   Objects/stm32f4xx_exti.crf
+#	modified:   Objects/stm32f4xx_flash.crf
+#	deleted:    Objects/stm32f4xx_flash.d
+#	deleted:    Objects/stm32f4xx_flash.o
+#	modified:   Objects/stm32f4xx_gpio.crf
+#	modified:   Objects/stm32f4xx_i2c.crf
+#	modified:   Objects/stm32f4xx_it.crf
+#	modified:   Objects/stm32f4xx_iwdg.crf
+#	modified:   Objects/stm32f4xx_pwr.crf
+#	modified:   Objects/stm32f4xx_rcc.crf
+#	modified:   Objects/stm32f4xx_rtc.crf
+#	modified:   Objects/stm32f4xx_syscfg.crf
+#	modified:   Objects/stm32f4xx_tim.crf
+#	modified:   Objects/stm32f4xx_usart.crf
+#	modified:   Objects/stm32f4xx_wwdg.crf
+#	modified:   Objects/system_stm32f4xx.crf
+#	modified:   Objects/usart3.crf
+#	modified:   RMCProject.uvguix.xf
+#	modified:   RMCProject.uvoptx
+#	modified:   RMVariables.c
+#	modified:   RMVariables.h
+#	modified:   RM_Motor/MotorEngine.c
+#	modified:   RM_Yuntai/can.c
+#	modified:   main.c
+#
+

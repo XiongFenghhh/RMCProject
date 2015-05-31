@@ -15,6 +15,8 @@ $RECYCLE.BIN/
 *.msp
 *.o
 *.d
+*.crf
+
 
 # Windows shortcuts
 *.lnk
@@ -43,3 +45,11 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.crf
+Objects/encoder.crf
+*.crf
+Objects/batholithtimer.crf
+*.crf
+Objects/stm32f4xx_exti.crf
+*.crf
+*.crf

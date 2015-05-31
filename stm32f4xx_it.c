@@ -43,7 +43,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 static uint8_t itTimes=0;
-static uint8_t shootCount=0;
+
 static uint8_t brushStart=0;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -152,44 +152,32 @@ void SysTick_Handler(void)
 	itTimes=itTimes%8;
 	Encoder_Get();
 
-if(itTimes%2==0){	
-	if(setXSpeed-40>realXSpeed)
-	{
-		if(setXSpeed==0)realXSpeed+=35;
-		else realXSpeed+=35;
-	}
-	else if(setXSpeed+40<realXSpeed)
-	{
-		if(setXSpeed==0)realXSpeed-=35;
-		else realXSpeed-=35;
-	}
-		
-		
-	else realXSpeed=setXSpeed;
-	/*we might use the first dimension of errors to implement differential controll*/
-	me.errors[0][0]=me.errors[0][1];
-	me.errors[1][0]=me.errors[1][1];
-	me.errors[2][0]=me.errors[2][1];
-	me.errors[3][0]=me.errors[3][1];
-	
-	me.errors[0][1]=me.rotation_fil[0];//-encoder_cnt[0]/1024*60;
-	me.errors[1][1]=me.rotation_fil[1];//-encoder_cnt[1]/1024*60;
-	me.errors[2][1]=me.rotation_fil[2];//-encoder_cnt[2]/1024*60;
-	me.errors[3][1]=me.rotation_fil[3];//-encoder_cnt[3]/1024*60;
-	
-}else{
-if(setYSpeed-40>realYSpeed)
-{
-	if(setYSpeed==0)realYSpeed+=35;
-	else realYSpeed+=35;
-}else if(setYSpeed+20<realYSpeed)
-	{
-		if(setYSpeed==0)realYSpeed-=15;
-		else realYSpeed-=35;
-	}
-	else realYSpeed=setYSpeed;
+//if(itTimes%2==0){
+	realXSpeed=preX+0.5*(setXSpeed-preX);
+	preX=setXSpeed;
+	realYSpeed=setYSpeed=preY+0.5*(setYSpeed-preY);
+	preY=setYSpeed;
 
-}
+	/*we might use the first dimension of errors to implement differential controll*/
+	me.preErrors2[0]=me.preErrors[0];
+	me.preErrors2[1]=me.preErrors[1];
+	me.preErrors2[2]=me.preErrors[2];
+	me.preErrors2[3]=me.preErrors[3];
+	me.preErrors[0]=me.errors[0];
+	me.preErrors[1]=me.errors[1];
+	me.preErrors[2]=me.errors[2];
+	me.preErrors[3]=me.errors[3];
+
+	
+	me.errors[0]=me.rotation_fil[0]-encoder_cnt[0];
+	me.errors[1]=me.rotation_fil[1]+encoder_cnt[1];
+	me.errors[2]=me.rotation_fil[2]+encoder_cnt[2];
+	me.errors[3]=me.rotation_fil[3]-encoder_cnt[3];
+	me.isPIDAllowed=1;
+	
+//}else{
+
+//}
 	
 	/**
 	*shooting protection

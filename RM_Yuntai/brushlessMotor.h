@@ -16,6 +16,8 @@
 
 extern void BMotor_Init(void);
 extern void BMotor_PWM(uint8_t channel);
+void brushLessEnable(void);
+void brushLessDisable(void);	 
 #ifdef __cplusplus
 }
 #endif

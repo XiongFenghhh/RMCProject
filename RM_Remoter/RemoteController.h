@@ -111,7 +111,7 @@ struct RC_Ctl_t
 //void RC_Ctl_Reset();
 
 
-
+void RC_Reset(void);
 void RC_Init(void);
 void RC_Receive(void);
 void RC_Convert(void);

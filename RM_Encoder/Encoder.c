@@ -17,7 +17,7 @@
 //不需要重复定义了。只需要修改对应引脚就行了
 
 #define EncoderStartCNT 0x8000
-
+static int16_t preEncnt[4][2];
 
 /*****************************************************************
 函数：  void Encoder_TIM1_Init(void)
@@ -36,7 +36,8 @@ void Encoder_Init(void)
 	Encoder_TIM2_Init();
 	Encoder_TIM3_Init();
 	Encoder_TIM4_Init();
-	Encoder_TIM5_Init();
+	//Encoder_Start();
+	
 }
 
 /*****************************************************************
@@ -53,14 +54,22 @@ void Encoder_Init(void)
 *****************************************************************/
 void Encoder_Get(void)
 {
-		encoder_cnt[0] =Encoder_Count(TIM5); //encoder_cnt[0]*0.45+Encoder_Count(TIM2)*0.55;
-		encoder_cnt[1] =Encoder_Count(TIM2); //encoder_cnt[1]*0.45+Encoder_Count(TIM3)*0.55;
-		encoder_cnt[2] =Encoder_Count(TIM4); //encoder_cnt[2]*0.45+Encoder_Count(TIM4)*0.55;
-		encoder_cnt[3] =Encoder_Count(TIM3);//encoder_cnt[2]*0.45+Encoder_Count(TIM5)*0.55;
-	Encoder_Reset(TIM2);
-	Encoder_Reset(TIM3);
-	Encoder_Reset(TIM4);
-	Encoder_Reset(TIM5);
+		preEncnt[0][0]=preEncnt[0][1];
+		preEncnt[1][0]=preEncnt[1][1];
+		preEncnt[2][0]=preEncnt[2][1];
+		preEncnt[3][0]=preEncnt[3][1];
+		preEncnt[0][1]=Encoder_Count(TIM5); 
+		preEncnt[1][1] =Encoder_Count(TIM2);
+		preEncnt[2][1] =Encoder_Count(TIM4);
+		preEncnt[3][1] =Encoder_Count(TIM3);
+		encoder_cnt[0]=0*preEncnt[0][0]+1*preEncnt[0][1];
+		encoder_cnt[1]=0*preEncnt[1][0]+1*preEncnt[1][1];
+		encoder_cnt[2]=0*preEncnt[2][0]+1*preEncnt[2][1];
+		encoder_cnt[3]=0*preEncnt[3][0]+1*preEncnt[3][1];
+		Encoder_Reset(TIM2);
+		Encoder_Reset(TIM3);
+		Encoder_Reset(TIM4);
+		Encoder_Reset(TIM5);
 }
 
 /*****************************************************************
@@ -112,10 +121,11 @@ void Encoder_TIM1_Init(void)
 void Encoder_TIM2_Init(void)
 {
 	GPIO_InitTypeDef GPIO_TypeDefine;
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA|RCC_AHB1Periph_GPIOB,ENABLE);
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2|RCC_APB1Periph_TIM5,ENABLE);
 
-	GPIO_TypeDefine.GPIO_Pin = GPIO_Pin_5;
+	GPIO_TypeDefine.GPIO_Pin = GPIO_Pin_5|GPIO_Pin_0 | GPIO_Pin_1;
 	GPIO_TypeDefine.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_TypeDefine.GPIO_OType = GPIO_OType_PP;
 	GPIO_TypeDefine.GPIO_PuPd = GPIO_PuPd_UP;
@@ -126,12 +136,21 @@ void Encoder_TIM2_Init(void)
 	GPIO_Init(GPIOB,&GPIO_TypeDefine);
 	
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource5,  GPIO_AF_TIM2);
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource0,  GPIO_AF_TIM5);
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource1,  GPIO_AF_TIM5);
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource3,  GPIO_AF_TIM2);
 
+	TIM_TimeBaseInitStructure.TIM_Prescaler = 0; 
+    TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up; 
+    TIM_TimeBaseInitStructure.TIM_Period = 65535;	
+    TIM_TimeBaseInitStructure.TIM_ClockDivision = 0; 
+	TIM_TimeBaseInit(TIM5,&TIM_TimeBaseInitStructure); 
 	TIM_EncoderInterfaceConfig(TIM2, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
+	TIM_EncoderInterfaceConfig(TIM5, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
 	//Reset counter，From 0x8000
 	TIM_SetCounter(TIM2,0x8000);
-	TIM_Cmd(TIM2, ENABLE);
+	TIM_SetCounter(TIM5,0x8000);
+	
 }
 
 /*****************************************************************
@@ -165,7 +184,7 @@ void Encoder_TIM3_Init(void)
 	TIM_EncoderInterfaceConfig(TIM3, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
 	//Reset counter，From 0x8000
 	TIM_SetCounter(TIM3,0x8000);
-	TIM_Cmd(TIM3, ENABLE);
+	
 }
 
 
@@ -196,11 +215,12 @@ void Encoder_TIM4_Init(void)
 
 	GPIO_PinAFConfig(GPIOD, GPIO_PinSource12,  GPIO_AF_TIM4);
 	GPIO_PinAFConfig(GPIOD, GPIO_PinSource13,  GPIO_AF_TIM4);
-
+            //?????????? 
+     
 	TIM_EncoderInterfaceConfig(TIM4, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
 	//Reset counter，From 0x8000
 	TIM_SetCounter(TIM4,0x8000);
-	TIM_Cmd(TIM4, ENABLE);
+	
 }
 
 /*****************************************************************
@@ -218,29 +238,26 @@ void Encoder_TIM4_Init(void)
 void Encoder_TIM5_Init(void)
 {
 	GPIO_InitTypeDef GPIO_TypeDefine;
-	 TIM_ICInitTypeDef TIM_ICInitStructure;
+	
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5,ENABLE);
 
 	GPIO_TypeDefine.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
 	GPIO_TypeDefine.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_TypeDefine.GPIO_OType = GPIO_OType_PP;
-	GPIO_TypeDefine.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_TypeDefine.GPIO_Speed = GPIO_Speed_100MHz;
-//	GPIO_TypeDefine.GPIO_Mode = GPIO_Mode_IN;
-//	GPIO_TypeDefine.GPIO_PuPd=GPIO_PuPd_NOPULL;
+	GPIO_TypeDefine.GPIO_PuPd=GPIO_PuPd_NOPULL;
 	GPIO_Init(GPIOA,&GPIO_TypeDefine);
+	
 
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource0,  GPIO_AF_TIM5);
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource1,  GPIO_AF_TIM5);
-
+	
 	TIM_EncoderInterfaceConfig(TIM5, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
 	//Reset counter，From 0x8000
-	TIM_ICStructInit(&TIM_ICInitStructure);
-    TIM_ICInitStructure.TIM_ICFilter = 6;         //?????
-    TIM_ICInit(TIM5, &TIM_ICInitStructure);
+
 	TIM_SetCounter(TIM5,0x8000);
-	TIM_Cmd(TIM5, ENABLE);
+	
 }
 
 /*****************************************************************
@@ -253,10 +270,26 @@ void Encoder_TIM5_Init(void)
 版本：	V0.1
 时间：	5015-05-11 50:55:55
 *****************************************************************/
-void Encoder_Start(TIM_TypeDef* TIMx,uint16_t CNT)
+void Encoder_Start()
 {
-	TIMx->CNT = CNT;
+	
+	TIM_Cmd(TIM5, ENABLE);
+	TIM_Cmd(TIM2, ENABLE);
+	TIM_Cmd(TIM3, ENABLE);
+	TIM_Cmd(TIM4, ENABLE);
 }	
+/**
+*@description disable Timer2,3,4,5
+*@para none
+*@retVal none
+*/
+void Encoder_Disable()
+{
+	TIM_Cmd(TIM5, DISABLE);
+	TIM_Cmd(TIM2, DISABLE);
+	TIM_Cmd(TIM3, DISABLE);
+	TIM_Cmd(TIM4, DISABLE);	
+}
 
 /*****************************************************************
 函数：  void Encoder_Reset(void)

@@ -8,10 +8,10 @@
  static double lp_p =25;
  static double lp_i = 0.0;
  static double lp_d = 60;
- static double ly_p = 4;
+ static double ly_p = 24;
  static double ly_i = 0;
- static double ly_d =16;
- static double lf_p=0;
+ static double ly_d =77;
+ static double lf_p=10;
  static double lf_d=0;
  static double lf_i=0;
 void setPitchPositionParameters(double kp,double ki,double kd){
@@ -69,9 +69,9 @@ void  outputData(void){
 uint8_t i;
 uint8_t temp8[10];
 uint16_t temp16[4];
-uint8_t t;
-temp16[0]=0;//(uint16_t)ly_p;
-temp16[1]=0;//(uint16_t)ly_i;
+
+temp16[0]=(uint16_t)me.rotation_fil[3];
+temp16[1]=(uint16_t)encoder_cnt[3];
 temp16[2]=0;//(uint16_t)ly_d;	
 temp16[3]=0;
 temp8[0]=0x7e;
@@ -231,9 +231,6 @@ double Position_Control_203(double current_position_203,double target_position_2
 {
     static double error_l[3] = {0.0,0.0,0.0};
     static double output = 0;
-    
-//		if(abs(current_position_203-target_position_203)>100)l_p=14.5;
-//		else if(abs(current_position_203-target_position_203)<70) l_p=12;
 		if(isMoving==1){
 //			
 //			l_p=30;
@@ -242,8 +239,6 @@ double Position_Control_203(double current_position_203,double target_position_2
       error_l[1] = error_l[2]; 
 		  error_l[2] = target_position_203 - current_position_203;
     
-			//if(error_l[2]>300){l_p=27;l_d=0.03;}
-	//	l_p=10*((abs(error_l[2]))/250)*((abs(error_l[2]))/250)+8;
     output = error_l[2] * ly_p 
 							+ (error_l[0]*0.2+error_l[2]*0.4+error_l[1]*0.3)  * ly_i 
 			+ (error_l[2] - error_l[1]) * ly_d;//@TODO: i controll has no effect on output
@@ -307,7 +302,7 @@ double followControl(int current_position_203)
 		
 		error_l[0] = error_l[1];
       error_l[1] = error_l[2]; 
-		  error_l[2] = 3200 - current_position_203;
+		  error_l[2] = 4000 - current_position_203;
     
 
     output = error_l[2] * lf_p 

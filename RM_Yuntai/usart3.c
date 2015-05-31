@@ -149,48 +149,39 @@ void USART3_IRQHandler(void)
 void resetIsReceive(){isReceived=0;}
 uint8_t getIsReceive(){return isReceived;}
 void setMotoParameter(){
-//if(ki==1)
+//	int kpi;
+////setYawPositionParameters(kp/100.0,0,kd/10.0);
+//if(kd==1)kpi=-(int)kp;
+//	else kpi=kp;
+//if(ki==2)
 //	{
-//		change=1-change;
-	int kpi;
-setYawPositionParameters(((double)kp),0,((double)kd));
-//		setPitchPositionParameters(((double)kp)/400,0,((double)kd)/10);
+//		setWanted_pWanted_y(kp,kd);
 //	}
-
-if(kd==1)kpi=-(int)kp;
-	else kpi=kp;
-if(ki==2)
-	{
-		setWanted_pWanted_y(kp,kd);
-	}
-if(ki==3)
-	{
-//		me.Kp[0]=(double)kp/100;
-//		me.Kd[0]=(double)kd/100;
-		setPiancha1(kpi/100);
-	}
- if(ki==4)
- {
-//	 me.Kp[1]=(double)kp/100;
-//	 me.Kd[1]=(double)kd/100;
-	 setPiancha2(kpi/100);
- }
- if(ki==5)
- {
-//	 me.Kp[2]=(double)kp/100;
-//	 me.Kd[2]=(double)kd/100;
-	 setPiancha3(kpi/100);
- }
- if(ki==6)
- {
-//	 me.Kp[3]=(double)kp/100;
-//	 me.Kd[3]=(double)kd/100;
-	 setPiancha4(kpi/100);
- }
- if(ki==7)
- {
-	 setDeadTime(kp);
- }
+//if(kd==3)
+//	{
+//		 me.Kp[0]=(double)(kp)/100;
+//		me.Ki[0]=(double)(ki)/1000;
+//	}
+// if(kd==4)
+// {
+//	 me.Kp[1]=(double)(kp)/100;
+//	 me.Ki[1]=(double)(ki)/1000;
+// }
+// if(kd==5)
+// {
+//	 me.Kp[2]=(double)(kp)/100;
+//	 me.Ki[2]=(double)(ki)/1000;
+// }
+// if(kd==6)
+// {
+	 Kp=(double)(kp)/100;
+	 Ki=(double)(ki)/1000;
+	 Kd=(double)(kd)/100;
+// }
+// if(ki==7)
+// {
+//	 setDeadTime(kp);
+// }
 }
 int16_t getYunTaiAdjustYaw(){return Yaw_adjust ;}
 int16_t getYunTaiAdjustPitch(){return Pitch_adjust ;}

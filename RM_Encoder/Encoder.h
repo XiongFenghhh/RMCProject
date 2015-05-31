@@ -14,7 +14,8 @@
 
 extern void Encoder_Init(void);
 extern void Encoder_Get(void);
-extern void Encoder_Start(TIM_TypeDef* TIMx,uint16_t CNT);
+extern void Encoder_Start(void);
+void Encoder_Disable(void);
 extern void Encoder_Reset(TIM_TypeDef* TIMx);
 extern uint16_t Encoder_Count(TIM_TypeDef* TIMx);
 

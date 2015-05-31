@@ -16,7 +16,7 @@
 #define abs(x) ((x)>0? (x):(-(x)))
 
 struct MotorEngine{
-	uint8_t isDebugging;
+	uint8_t isRun;
 	
 	double rotation[4];
 	double rotation_fil[4];
@@ -24,26 +24,24 @@ struct MotorEngine{
 	double Kp[4];
 	double Ki[4];
 	double Kd[4];
-	double deltaT;
-	double errors[4][2];
+
+	double errors[4];
+	double preErrors[4];
+	double preErrors2[4];
 	double maxAbs;
 	
 
   double pwm[4];
-	int isClock[4];
+	uint8_t isPIDAllowed;
 	
 	int isStart;
 	uint8_t isPWMallowed;
 };
 
-
+void MotorEngineReset(void);
 void MotorEngine_Config(void);
 void CalcRotations(void);
 
 void PIDAlgorithm(void);
-void PIDAlgorithm1(void);
-void PIDAlgorithm2(void);
-void PIDAlgorithm3(void);
-void PIDAlgorithm4(void);
 
 #endif
