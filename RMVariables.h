@@ -40,7 +40,7 @@ extern double setXSpeed;
 extern double realXSpeed;
 extern double setYSpeed;
 extern double realYSpeed;
-extern double setWSpeed;
+extern double realWSpeed;
 extern double preX;
 extern double preY;
 extern uint8_t yunTaiProtectionMode;

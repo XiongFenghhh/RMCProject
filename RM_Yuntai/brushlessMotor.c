@@ -78,6 +78,8 @@ void BMotor_Init(void)
 void brushLessEnable(void)
 {
 	TIM_Cmd(TIM9,ENABLE);
+	TIM_SetCompare1(TIM9,500);
+	TIM_SetCompare2(TIM9,500);
 }
 /**
 *@description Disable Timer9 
@@ -87,6 +89,8 @@ void brushLessEnable(void)
 void brushLessDisable(void)
 {
 	TIM_Cmd(TIM9,DISABLE);
+	TIM_SetCompare1(TIM9,500);
+	TIM_SetCompare2(TIM9,500);
 }
 
 /*****************************************************************
@@ -105,8 +109,6 @@ void BMotor_PWM(uint8_t channel)
 	pwm=getBMPWM()<=0.05*BM_PWM_MAX?\
 	0.05*BM_PWM_MAX:getBMPWM()>=0.1*BM_PWM_MAX?\
 	0.1*BM_PWM_MAX:getBMPWM();
-	if(pwm>0.05*BM_PWM_MAX)GPIO_ResetBits(GPIOC,GPIO_Pin_10);
-	else GPIO_SetBits(GPIOC,GPIO_Pin_10);
 	switch(channel)
 	{
 		case 1:	TIM_SetCompare1(TIM9,pwm);break;

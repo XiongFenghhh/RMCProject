@@ -155,8 +155,9 @@ void SysTick_Handler(void)
 //if(itTimes%2==0){
 	realXSpeed=preX+0.5*(setXSpeed-preX);
 	preX=setXSpeed;
-	realYSpeed=setYSpeed=preY+0.5*(setYSpeed-preY);
+	realYSpeed=preY+0.5*(setYSpeed-preY);
 	preY=setYSpeed;
+	realWSpeed=RC_Ctl.velocity.w;
 
 	/*we might use the first dimension of errors to implement differential controll*/
 	me.preErrors2[0]=me.preErrors[0];
@@ -174,11 +175,7 @@ void SysTick_Handler(void)
 	me.errors[2]=me.rotation_fil[2]+encoder_cnt[2];
 	me.errors[3]=me.rotation_fil[3]-encoder_cnt[3];
 	me.isPIDAllowed=1;
-	
-//}else{
 
-//}
-	
 	/**
 	*shooting protection
 	*/

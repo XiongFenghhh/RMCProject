@@ -10,13 +10,13 @@ double realXSpeed;
 double setYSpeed;
 double realYSpeed;
 
-double setWSpeed;
+double realWSpeed;
 double preX;
 double preY;
 uint8_t yunTaiProtectionMode;
-double Kp=10.5;
-double Ki=0.9;
-double Kd=0.3;
+double Kp=8;
+double Ki=0.5;
+double Kd=0.15;
 
 unsigned char pWord[10];
 unsigned char vscope_en = 1;
@@ -70,7 +70,7 @@ if(mode==1&&me.isRun==0)
 		RC_Reset();
 		setXSpeed=0;
 		setYSpeed=0;
-		setWSpeed=0;
+		realWSpeed=0;
 		yunTaiProtectionMode=0;
 		CAN_ITConfig(CAN1,CAN_IT_FMP0,ENABLE);
 		GPIO_ResetBits(GPIOC,GPIO_Pin_10);
@@ -86,7 +86,7 @@ if(mode==0&&me.isRun==1)
 		RC_Reset();
 		setXSpeed=0;
 		setYSpeed=0;
-		setWSpeed=0;
+		realWSpeed=0;
 		yunTaiProtectionMode=1;
 	  GPIO_SetBits(GPIOC,GPIO_Pin_10);
 		me.isRun=0;

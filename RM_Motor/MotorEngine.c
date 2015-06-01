@@ -13,7 +13,7 @@ static double preR4;
 #define pwmMax 4800
 #define pwmMin 0
 #define pwmMiddle 5000
-#define cumulationLimit 500
+#define cumulationLimit 400
 uint8_t judgeState(uint8_t ch)
 {
 	if(me.rotation_fil[ch]*encoder_cnt[ch]>0&&abs(me.rotation_fil[ch])>=30&&abs(encoder_cnt[ch])>=30)return set_feedback_sameDirection;
@@ -44,7 +44,7 @@ double Velocity_Control(double error,double rotation)
     inte += error;
 		if(inte>cumulationLimit)inte=cumulationLimit;
 		else if(inte<-cumulationLimit)inte=-cumulationLimit;
-   	if(abs(rotation)>600&&abs(error)<0.4*abs(rotation))
+   	if(abs(rotation)>680&&abs(error)<0.4*abs(rotation))
 		output = error_v[1] * Kp           
              + (error_v[1] - error_v[0]) * Kd
 						 +(inte)*Ki;

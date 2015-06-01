@@ -142,7 +142,7 @@ void RC_Receive(void){
 				RC_Ctl.key.leftTurn = (RC_Ctl.key.v & RC_Ctl.setKey.leftturn)==0?0:1;
 				RC_Ctl.key.rightTurn = (RC_Ctl.key.v & RC_Ctl.setKey.rightturn)==0?0:1;
 				RC_Ctl.key.shift = (RC_Ctl.key.v & 0x0010)==0?0:1;
-				RC_Ctl.velocity.vel=RC_Ctl.key.shift==1?1500:1450;	
+				RC_Ctl.velocity.vel=RC_Ctl.key.shift==1?1900:1800;	
 			
 }
 
@@ -222,27 +222,29 @@ if(me.isStart==1)
 			
 				if(RC_Ctl.key.leftward==1&&RC_Ctl.key.rightward==0)
 					{
-						setXSpeed=-RC_Ctl.velocity.vel*0.8;
+						setXSpeed=-RC_Ctl.velocity.vel*0.6;
 					}
 				else if(RC_Ctl.key.rightward==1&&RC_Ctl.key.leftward==0)
 					{
-						setXSpeed=RC_Ctl.velocity.vel*0.8;
+						setXSpeed=RC_Ctl.velocity.vel*0.6;
 					}
 				else setXSpeed=0;
 			
 			/**==========================Rotation Control=================================**/
 				if(RC_Ctl.key.leftTurn==1&&RC_Ctl.key.rightTurn==0)
 				{
-					RC_Ctl.velocity.w+=-1.8;
+					RC_Ctl.velocity.w=-1.4;
 				}
 				else if(RC_Ctl.key.rightTurn==1&&RC_Ctl.key.leftTurn==0)
 				{
-					RC_Ctl.velocity.w+=1.8;
-				}else RC_Ctl.velocity.w=0;
-				
-				if(RC_Ctl.mouse.x>100)RC_Ctl.velocity.w+=3.3;
-				else if(RC_Ctl.mouse.x<-100)RC_Ctl.velocity.w+=-3.3;
-				else RC_Ctl.velocity.w+=((double)(RC_Ctl.mouse.x))/25;
+					RC_Ctl.velocity.w=1.4;
+				}else
+				{	
+					RC_Ctl.velocity.w=0;
+					if(RC_Ctl.mouse.x>100)RC_Ctl.velocity.w+=4.5;
+					else if(RC_Ctl.mouse.x<-100)RC_Ctl.velocity.w+=-4.5;
+					else RC_Ctl.velocity.w+=((double)(RC_Ctl.mouse.x))/22;
+				}
 
 				me.isStart=1;	
 			
@@ -253,9 +255,14 @@ setIsAutoTargetMode(RC_Ctl.key.ctrl);
 setYunTaiPosition(getYunTaiDeltaPositionPitch(),getYunTaiDeltaPositionYaw());
 }
 
+/**
+*@description return the velocity of vheicle
+*@para none
+*@retVal realYSpeed/realXSpeed/realWSpeed: the vheicle velocity x,y,w;
+*/
 double getYvelocity(void){return realYSpeed;}
 double getXvelocity(void){return realXSpeed;}
-double getWvelocity(void){return RC_Ctl.velocity.w;}
+double getWvelocity(void){return realWSpeed;}
 uint32_t getBMPWM(void){return RC_Ctl.velocity.BMPWM;}
 uint8_t isStepperMoving(void){return RC_Ctl.velocity.isStepperMoving;}
 void getMouse(void)
@@ -275,11 +282,11 @@ double getYunTaiDeltaPositionYaw(void){
 double getYunTaiDeltaPositionPitch(void){
 	
 	if(RC_Ctl.rc.s1==1){
-		if(RC_Ctl.mouse.y>80)return 0.5;
-		else if(RC_Ctl.mouse.y<-80)return -0.5;
-		else return (double)(RC_Ctl.mouse.y)/160;
+		if(RC_Ctl.mouse.y>80)return 0.8;
+		else if(RC_Ctl.mouse.y<-80)return -0.8;
+		else return (double)(RC_Ctl.mouse.y)/100;
 	}else if(RC_Ctl.rc.s1==3){
-		return (-(double)(RC_Ctl.rc.ch3-1024)/3)/160;
+		return (-(double)(RC_Ctl.rc.ch3-1024)/3)/150;
 	}else return 0;
 }
 uint16_t isYunTaiYawMoving(void){
@@ -295,6 +302,10 @@ uint16_t isAutoTarget(void){
 if(RC_Ctl.key.ctrl==1)return 1;
 	else return 0;
 }
+
+
+
+
 
 FLASH_Status storeCurrentKeySettings(void){
 FLASH_Unlock();
