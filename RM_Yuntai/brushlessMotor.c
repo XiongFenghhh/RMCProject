@@ -69,6 +69,14 @@ void BMotor_Init(void)
     TIM_OC2PreloadConfig(TIM9,TIM_OCPreload_Enable);
            
     TIM_ARRPreloadConfig(TIM9,ENABLE);
+		TIM_SetCompare1(TIM9,200);
+	#ifndef Gun
+	TIM_SetCompare2(TIM9,200);
+	#endif
+	#ifdef Gun
+	TIM_SetCompare2(TIM9,325);
+	#endif
+	TIM_Cmd(TIM9,ENABLE);
 }
 /**
 *@description Enable Timer9 
@@ -77,10 +85,16 @@ void BMotor_Init(void)
 */
 void brushLessEnable(void)
 {
-	TIM_Cmd(TIM9,ENABLE);
-	TIM_SetCompare1(TIM9,500);
-	TIM_SetCompare2(TIM9,500);
+	TIM_SetCompare1(TIM9,200);
+	#ifndef Gun
+	TIM_SetCompare2(TIM9,200);
+	#endif
+	#ifdef Gun
+	TIM_SetCompare2(TIM9,325);
+	#endif
+	
 }
+
 /**
 *@description Disable Timer9 
 *@para	 none
@@ -88,9 +102,14 @@ void brushLessEnable(void)
 */
 void brushLessDisable(void)
 {
-	TIM_Cmd(TIM9,DISABLE);
-	TIM_SetCompare1(TIM9,500);
-	TIM_SetCompare2(TIM9,500);
+	TIM_SetCompare1(TIM9,200);
+	#ifndef Gun
+	TIM_SetCompare2(TIM9,200);
+	#endif
+	#ifdef Gun
+	TIM_SetCompare2(TIM9,325);
+	#endif
+	
 }
 
 /*****************************************************************
@@ -112,7 +131,9 @@ void BMotor_PWM(uint8_t channel)
 	switch(channel)
 	{
 		case 1:	TIM_SetCompare1(TIM9,pwm);break;
+		#ifndef Gun
 		case 2:	TIM_SetCompare2(TIM9,pwm);break;
+		#endif
 		default:TIM_SetCompare1(TIM9,0.05*BM_PWM_MAX);break;
 	}
 }

@@ -29,5 +29,7 @@ int MPU6050_Initialization(void);
 int MPU6050Second_Initialization(void);
 int MPU6050_ReadData(void);
 void MPU6050_Gyro_calibration(void);
+float setYunTaiYaw(void);
+float getYunTaiYaw(void);
 
 #endif

@@ -148,16 +148,46 @@ void PendSV_Handler(void)
 //@TODO Feedback from Encoder
 void SysTick_Handler(void)
 {
+//	 CAN_ITConfig(CAN1, CAN_IT_FMP0, DISABLE); //@modified by huangmin 2015.06.02 
 	itTimes++;
 	itTimes=itTimes%8;
 	Encoder_Get();
 
-//if(itTimes%2==0){
-	realXSpeed=preX+0.5*(setXSpeed-preX);
-	preX=setXSpeed;
-	realYSpeed=preY+0.5*(setYSpeed-preY);
-	preY=setYSpeed;
+if(me.isRun==1&&me.isStart==1){
+	
+if(RC_Ctl.rc.s1==1){
+	if(abs(realXSpeed-setXSpeed)<100)
+	{
+		realXSpeed=setXSpeed;
+	}else
+	{
+		realXSpeed+=0.04*(setXSpeed-preX);
+	}
+	
+	if(abs(realYSpeed-setYSpeed)<100)
+	{
+		realYSpeed=setYSpeed;
+	}else
+	{
+		realYSpeed+=0.04*(setYSpeed-preY);
+	}
+	
+//	if(abs(realWSpeed-RC_Ctl.velocity.w)<0.6)
+//	{
+//		realWSpeed=RC_Ctl.velocity.w;
+//	}else
+//	{
+//		realWSpeed+=0.1*(RC_Ctl.velocity.w-preW);
+//	}
+	if(abs(realWSpeed-RC_Ctl.velocity.w)<0.3)
+		realWSpeed=RC_Ctl.velocity.w;
+	else realWSpeed+=0.4*(RC_Ctl.velocity.w-realWSpeed);
+}else if(RC_Ctl.rc.s1==3)
+{
+	realXSpeed=setXSpeed;
+	realYSpeed=setYSpeed;
 	realWSpeed=RC_Ctl.velocity.w;
+}
 
 	/*we might use the first dimension of errors to implement differential controll*/
 	me.preErrors2[0]=me.preErrors[0];
@@ -175,7 +205,7 @@ void SysTick_Handler(void)
 	me.errors[2]=me.rotation_fil[2]+encoder_cnt[2];
 	me.errors[3]=me.rotation_fil[3]-encoder_cnt[3];
 	me.isPIDAllowed=1;
-
+}
 	/**
 	*shooting protection
 	*/
@@ -196,8 +226,12 @@ void SysTick_Handler(void)
 			GPIO_ResetBits(GPIOD,GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3);
 	}
 	/****************************************/
-		
- 
+	if(follow_yaw_en)
+	{
+			MPU6050_ReadData();
+		  getYunTaiYaw();
+  } 
+//		CAN_ITConfig(CAN1,CAN_IT_FMP0,ENABLE);//@hmodified by huangmin 2015.06.02 
 }
 
 

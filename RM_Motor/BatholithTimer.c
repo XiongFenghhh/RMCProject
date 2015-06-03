@@ -79,7 +79,7 @@ void RmBatholicTIM1_Config(){
 	bdStructure.TIM_OSSRState=TIM_OSSRState_Enable;
 	bdStructure.TIM_OSSIState=TIM_OSSIState_Enable;
 	bdStructure.TIM_LOCKLevel=TIM_LOCKLevel_OFF;
-	bdStructure.TIM_DeadTime=0x0f;
+	bdStructure.TIM_DeadTime=0x08;
 	bdStructure.TIM_Break=TIM_Break_Disable;
 	bdStructure.TIM_BreakPolarity=TIM_BreakPolarity_High;
   bdStructure.TIM_AutomaticOutput=TIM_AutomaticOutput_Enable;
@@ -156,7 +156,7 @@ void RmBatholicTIM8_Config(){
 	bdStructure.TIM_OSSRState=TIM_OSSRState_Enable;
 	bdStructure.TIM_OSSIState=TIM_OSSIState_Enable;
 	bdStructure.TIM_LOCKLevel=TIM_LOCKLevel_OFF;
-	bdStructure.TIM_DeadTime=0x0f;
+	bdStructure.TIM_DeadTime=0x08;
 	bdStructure.TIM_Break=TIM_Break_Disable;
 	bdStructure.TIM_BreakPolarity=TIM_BreakPolarity_High;
   bdStructure.TIM_AutomaticOutput=TIM_AutomaticOutput_Enable;

@@ -97,6 +97,9 @@ struct RC_Ctl_t
 		double y;
 		double w;
 		uint32_t BMPWM;
+			#ifdef Gun
+		uint32_t steerPWM;
+			#endif
 		uint8_t isBMSet;
 		uint8_t isStepperMoving;
 		}velocity;

@@ -160,7 +160,7 @@ if(yunTaiProtectionMode==0){
 		 //if(abs(RC_Ctl.mouse.x)<1)
 			 // wanted_y = wanted_y ;
 			// else 
-			  wanted_y = 4200; 
+			  
 		 
 			if(wanted_p>4800)			 wanted_p=4800;//ss:4500 ps:6000
 				else if(wanted_p<3800) wanted_p=3800;//ss:3500 ps:5000

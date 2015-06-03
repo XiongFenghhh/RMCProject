@@ -12,7 +12,23 @@ void RC_Reset(void)
 		RC_Ctl.velocity.isStepperMoving=0;
 		RC_Ctl.velocity.BMPWM=0.05*BM_PWM_MAX;
 		RC_Ctl.velocity.isBMSet=0;
+	#ifdef Gun
+		RC_Ctl.velocity.steerPWM=325;
+	#endif
 		RC_Ctl.rc.ch3=1024;
+		RC_Ctl.mouse.x=0;
+		RC_Ctl.mouse.y=0;
+		RC_Ctl.key.forward=0;
+		RC_Ctl.key.backward=0;
+		RC_Ctl.key.leftTurn=0;
+		RC_Ctl.key.rightTurn=0;
+		RC_Ctl.key.leftward=0;
+		RC_Ctl.key.rightward=0;
+	setXSpeed=0;
+	realXSpeed=0;
+	realYSpeed=0;
+	setYSpeed=0;
+	realWSpeed=0;
 }
 
 /**
@@ -142,7 +158,7 @@ void RC_Receive(void){
 				RC_Ctl.key.leftTurn = (RC_Ctl.key.v & RC_Ctl.setKey.leftturn)==0?0:1;
 				RC_Ctl.key.rightTurn = (RC_Ctl.key.v & RC_Ctl.setKey.rightturn)==0?0:1;
 				RC_Ctl.key.shift = (RC_Ctl.key.v & 0x0010)==0?0:1;
-				RC_Ctl.velocity.vel=RC_Ctl.key.shift==1?1900:1800;	
+				RC_Ctl.velocity.vel=RC_Ctl.key.shift==1?500:1550;	
 			
 }
 
@@ -154,9 +170,13 @@ void RC_Receive(void){
 
 
 void RC_Convert(void){
+double tempYSpeed=0;
+double tempXSpeed=0;
+double tempWSpeed=0;
 /**=====================================Shooting part==================================**/
 if(me.isStart==1)
 {
+	
 	if(RC_Ctl.mouse.isClicked_r==1&&RC_Ctl.velocity.isBMSet==0&&RC_Ctl.velocity.isStepperMoving==0)
 		{
 			if(RC_Ctl.velocity.BMPWM<0.1*BM_PWM_MAX)
@@ -188,6 +208,7 @@ if(me.isStart==1)
 /**=================================Remote Controller Part===========================**/
 	if(RC_Ctl.rc.s1==3)
 	{
+			me.isStart=1;
 	if((RC_Ctl.rc.ch0-1024)*(RC_Ctl.rc.ch0-1024)+(RC_Ctl.rc.ch1-1024)*(RC_Ctl.rc.ch1-1024)>680*680)
 	{
 		setXSpeed=(double)(RC_Ctl.rc.ch0-1024)/sqrtf((RC_Ctl.rc.ch0-1024)*(RC_Ctl.rc.ch0-1024)+(RC_Ctl.rc.ch1-1024)*(RC_Ctl.rc.ch1-1024))*1200;
@@ -198,23 +219,27 @@ if(me.isStart==1)
 		setYSpeed=(double)(RC_Ctl.rc.ch1-1024)/660*1200;
 	}
 		RC_Ctl.velocity.w=(double)(RC_Ctl.rc.ch2-1024)/660*2;
-		me.isStart=1;
+	
 	}
 /**=====================================Key Board Part=============================**/
 	else if(RC_Ctl.rc.s1==1)
 	{
+		me.isStart=1;	
 			RC_Ctl.velocity.w=0;
 			/**==========================Forward and BackWard Control=======================**/	
 			
 					if(RC_Ctl.key.forward==1&&RC_Ctl.key.backward==0)
 						{
-							setYSpeed=RC_Ctl.velocity.vel;
+							tempYSpeed=RC_Ctl.velocity.vel;
 						}
 					else if(RC_Ctl.key.backward==1&&RC_Ctl.key.forward==0)
 						{
-							setYSpeed=-RC_Ctl.velocity.vel;
+							tempYSpeed=-RC_Ctl.velocity.vel;
 						}
-					else setYSpeed=0;	
+					else tempYSpeed=0;	
+					if(tempYSpeed!=setYSpeed)preY=setYSpeed;
+					else preY=preY;
+					setYSpeed=tempYSpeed;
 			
 			
 			/**=====================Left and Right Control===============================**/
@@ -222,31 +247,39 @@ if(me.isStart==1)
 			
 				if(RC_Ctl.key.leftward==1&&RC_Ctl.key.rightward==0)
 					{
-						setXSpeed=-RC_Ctl.velocity.vel*0.6;
+						tempXSpeed=-RC_Ctl.velocity.vel*0.6;
 					}
 				else if(RC_Ctl.key.rightward==1&&RC_Ctl.key.leftward==0)
 					{
-						setXSpeed=RC_Ctl.velocity.vel*0.6;
+						tempXSpeed=RC_Ctl.velocity.vel*0.6;
 					}
-				else setXSpeed=0;
+				else tempXSpeed=0;
+					if(tempXSpeed!=setXSpeed)preX=setXSpeed;
+					else preX=preX;
+					setXSpeed=tempXSpeed;
 			
 			/**==========================Rotation Control=================================**/
 				if(RC_Ctl.key.leftTurn==1&&RC_Ctl.key.rightTurn==0)
 				{
-					RC_Ctl.velocity.w=-1.4;
+					tempWSpeed=-1.4;
 				}
 				else if(RC_Ctl.key.rightTurn==1&&RC_Ctl.key.leftTurn==0)
 				{
-					RC_Ctl.velocity.w=1.4;
+					tempWSpeed=1.4;
 				}else
 				{	
-					RC_Ctl.velocity.w=0;
-					if(RC_Ctl.mouse.x>100)RC_Ctl.velocity.w+=4.5;
-					else if(RC_Ctl.mouse.x<-100)RC_Ctl.velocity.w+=-4.5;
-					else RC_Ctl.velocity.w+=((double)(RC_Ctl.mouse.x))/22;
+					tempWSpeed=0;
+					if(RC_Ctl.mouse.x!=0)
+						{
+							if(RC_Ctl.mouse.x>60)tempWSpeed=3;
+							else if(RC_Ctl.mouse.x<-60)tempWSpeed=-3;
+							else tempWSpeed=((double)(RC_Ctl.mouse.x))/20;
+						}
 				}
-
-				me.isStart=1;	
+			if(tempWSpeed!=RC_Ctl.velocity.w)preW=RC_Ctl.velocity.w;
+				else preW=preW;
+				RC_Ctl.velocity.w=tempWSpeed;
+				
 			
 	}else me.isStart=0;
 /**====================================Vision Part======================================**/
@@ -263,7 +296,23 @@ setYunTaiPosition(getYunTaiDeltaPositionPitch(),getYunTaiDeltaPositionYaw());
 double getYvelocity(void){return realYSpeed;}
 double getXvelocity(void){return realXSpeed;}
 double getWvelocity(void){return realWSpeed;}
-uint32_t getBMPWM(void){return RC_Ctl.velocity.BMPWM;}
+
+/**
+*@description get the pwm for steering moto and brushless moto
+*@para none
+*@retVal the pwm for brushless moto 
+*/
+uint32_t getBMPWM(void)
+{
+#ifdef Gun
+RC_Ctl.velocity.steerPWM=300+((double)(RC_Ctl.rc.ch3-1024)/660*200);
+	RC_Ctl.velocity.steerPWM+=(double)(RC_Ctl.mouse.y)/10;
+if(RC_Ctl.velocity.steerPWM>345)RC_Ctl.velocity.steerPWM=345;
+else if(RC_Ctl.velocity.steerPWM<335)RC_Ctl.velocity.steerPWM=335 ;
+	TIM_SetCompare2(TIM9,RC_Ctl.velocity.steerPWM);
+#endif	
+return RC_Ctl.velocity.BMPWM;
+}
 uint8_t isStepperMoving(void){return RC_Ctl.velocity.isStepperMoving;}
 void getMouse(void)
 {
@@ -273,18 +322,15 @@ void getMouse(void)
 
 //Êó±ê¼üÅÌ
 double getYunTaiDeltaPositionYaw(void){
-//	if(RC_Ctl.mouse.y<=80&&RC_Ctl.mouse.y>=-80)
-//	return (double)(RC_Ctl.mouse.x)/100;
-//	else return 0.5;
 	return 0;
 }
 
 double getYunTaiDeltaPositionPitch(void){
 	
 	if(RC_Ctl.rc.s1==1){
-		if(RC_Ctl.mouse.y>80)return 0.8;
-		else if(RC_Ctl.mouse.y<-80)return -0.8;
-		else return (double)(RC_Ctl.mouse.y)/100;
+		if(RC_Ctl.mouse.y>60)return 1;
+		else if(RC_Ctl.mouse.y<-60)return -1;
+		else return (double)(RC_Ctl.mouse.y)/60;
 	}else if(RC_Ctl.rc.s1==3){
 		return (-(double)(RC_Ctl.rc.ch3-1024)/3)/150;
 	}else return 0;

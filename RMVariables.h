@@ -21,6 +21,9 @@
 #include "mpu6050_interrupt.h"
 #include "RMflash.h"
 
+//@modified by huangmin on2015.06.02
+#define TIME_INTV 0.005 //全局变量,设置中断时间间隔
+
 #define	BM_PWM_MAX	4000
 //declaration of struct:MotorEngine and RC_Ctl_t
 struct MotorEngine;
@@ -43,6 +46,7 @@ extern double realYSpeed;
 extern double realWSpeed;
 extern double preX;
 extern double preY;
+extern double preW;
 extern uint8_t yunTaiProtectionMode;
 extern double Kp;
 extern double Ki;
@@ -52,6 +56,8 @@ extern struct RC_Ctl_t RC_Ctl;
 extern unsigned char pWord[10];
 extern unsigned char vscope_en;
 
+extern float yaw;
+extern char follow_yaw_en;
 extern int16_t encoder_cnt[4];
 
 

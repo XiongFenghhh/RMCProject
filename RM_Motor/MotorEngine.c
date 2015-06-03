@@ -10,10 +10,11 @@ static double preR1;
 static double preR2;
 static double preR3;
 static double preR4;
+static double inte = 0;
 #define pwmMax 4800
 #define pwmMin 0
 #define pwmMiddle 5000
-#define cumulationLimit 400
+#define cumulationLimit 2000
 uint8_t judgeState(uint8_t ch)
 {
 	if(me.rotation_fil[ch]*encoder_cnt[ch]>0&&abs(me.rotation_fil[ch])>=30&&abs(encoder_cnt[ch])>=30)return set_feedback_sameDirection;
@@ -37,20 +38,26 @@ double Velocity_Control(double error,double rotation)
    
     static double error_v[2] = {0.0,0.0};
     static double output = 0;
-    static double inte = 0;
+    
 		
     error_v[0] = error_v[1];
     error_v[1] = error;
-    inte += error;
+    if(abs(rotation)<5)
+		{
+		inte += error;
 		if(inte>cumulationLimit)inte=cumulationLimit;
+		
 		else if(inte<-cumulationLimit)inte=-cumulationLimit;
-   	if(abs(rotation)>680&&abs(error)<0.4*abs(rotation))
-		output = error_v[1] * Kp           
-             + (error_v[1] - error_v[0]) * Kd
-						 +(inte)*Ki;
-		else output=error_v[1] * Kp           
+		}
+		#ifndef Gun
+		output=error_v[1] * Kp           
              + (error_v[1] - error_v[0]) * Kd;
-							
+		#endif
+		#ifdef Gun
+
+				output=error_v[1] * Kp           
+             + (error_v[1] - error_v[0]) * Kd;
+		#endif
      
     return output;//cyq:for6015 ·´Ïò
 }
@@ -63,6 +70,11 @@ void PIDAlgorithmAll(uint8_t ch)
 //	me.pwm[channel]= Velocity_Control(me.errors[channel]);
 
 	me.pwm[channel]=Velocity_Control(me.errors[channel],me.rotation_fil[channel]);
+	#ifdef Gun
+	if(channel==0&&me.rotation_fil[channel]==0)me.pwm[channel]-=515;
+	if(channel==1&&me.rotation_fil[channel]==0)me.pwm[channel]+=200;
+	if(channel==2&&me.rotation_fil[channel]==0)me.pwm[channel]+=350;
+	#endif
 	if(me.pwm[channel]<-pwmMax)me.pwm[channel]=-pwmMax;
 	else if(me.pwm[channel]>pwmMax)me.pwm[channel]=pwmMax;
 	
@@ -94,14 +106,21 @@ void MotorEngineReset(void)
 	me.pwm[1]=0;
 	me.pwm[2]=0;
 	me.pwm[3]=0;
+	
+	me.isPIDAllowed=0;
+	me.rotation[0]=me.rotation_fil[0]=0;
+	me.rotation[1]=me.rotation_fil[1]=0;
+	me.rotation[2]=me.rotation_fil[2]=0;
+	me.rotation[3]=me.rotation_fil[3]=0;
 }
 void MotorEngine_Config(void){
 	
 	 MotorEngineReset();
 	
-	me.isStart=0;
-	me.isPWMallowed=0;
-	me.isRun=0;
+	me.isStart=0;//main while running flag
+	me.isPWMallowed=0;//pwm generation flag
+	me.isRun=0;//re-initialization
+	
 	xRatio=PI * tan(McnalmAngle) * McnalmDiameter;
 	yRatio= PI * McnalmDiameter;
 	wRatio=( dipanHengZhouju * tan(McnalmAngle) + dipanZongZhouju ) / 2 / PI / McnalmDiameter / tan(McnalmAngle);
@@ -173,8 +192,8 @@ void PIDAlgorithm(void)
 		PIDAlgorithmAll(2);
 		PIDAlgorithmAll(3);
 		PIDAlgorithmAll(4);
-		me.isPIDAllowed=0;
 		batholithSetPwm();
+		me.isPIDAllowed=0;
 	}
 }
 

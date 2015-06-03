@@ -36,7 +36,7 @@ void Encoder_Init(void)
 	Encoder_TIM2_Init();
 	Encoder_TIM3_Init();
 	Encoder_TIM4_Init();
-	//Encoder_Start();
+	Encoder_Start();
 	
 }
 

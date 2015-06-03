@@ -237,3 +237,26 @@ void MPU6050_Gyro_calibration(void)
 	gyroADC_Z_offset=(int)z_temp;
 	
 }
+//@modified by huangmin on 2015.06.02
+//*获取偏航角，
+//*对于MPU6050，由于没有磁阻，不能矫正陀螺仪零点，
+//*yaw可能会飘，但观察这么久，貌似只要在开机时矫正下，运行时不怎么飘
+//*TODO 用mpu9150，加入磁阻矫正
+//*TODO 理论情况，YAW云台返回的值应该在4000左右，如果跟随没问题
+//*在定时程序中检测如果2秒内没回4000+-200，关闭底盘跟随，YAW云台给定4000 
+float getYunTaiYaw(void)
+{
+	 yaw += (float)(MPU6050_Real_Data.Gyro_Z ) * TIME_INTV;
+	 return yaw;
+}
+
+//@modified by huangmin on 2015.06.02
+float setYunTaiYaw(void)
+{
+	if(RC_Ctl.mouse.y<=80&&RC_Ctl.mouse.y>=-80)
+	{
+		yaw +=(RC_Ctl.mouse.x)/100;
+	}
+  else yaw +=(RC_Ctl.mouse.x)/100;
+ return yaw;  
+}
